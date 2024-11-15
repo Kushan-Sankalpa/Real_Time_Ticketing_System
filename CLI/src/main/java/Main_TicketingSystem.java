@@ -175,7 +175,7 @@ public class Main_TicketingSystem {
                         break;
                     default:
                         System.out.println("Unknown command. Available commands: start, stop, status, exit");
-                }
+                } // this new
             }
         }
     }
