@@ -25,7 +25,7 @@ public class TicketController {
         return ticketService.addTicket(ticketDTO);
     }
 
-    @PostMapping("/{ticketId}/purchase")
+    @PostMapping("/{ticketId}/purchase") //tp://localhost:8080/api/tickets/11/purchase?customerName=Kushan
     public TicketDTO purchaseTicket(@PathVariable Long ticketId, @RequestParam String customerName) {
         return ticketService.purchaseTicket(ticketId, customerName);
     }
