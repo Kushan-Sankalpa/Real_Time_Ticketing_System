@@ -1,7 +1,7 @@
 package org.example.server.Controller;
 
 
-import org.example.server.DTO.VendorDTO;
+import org.example.server.Dto.VendorDTO;
 import org.example.server.Service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

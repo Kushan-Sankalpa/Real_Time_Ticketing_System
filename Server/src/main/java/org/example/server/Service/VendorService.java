@@ -1,6 +1,6 @@
 package org.example.server.Service;
 
-import org.example.server.DTO.VendorDTO;
+import org.example.server.Dto.VendorDTO;
 
 import java.util.List;
 

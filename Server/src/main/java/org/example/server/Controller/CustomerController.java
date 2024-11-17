@@ -1,6 +1,6 @@
 package org.example.server.Controller;
 
-import org.example.server.DTO.CustomerDTO;
+import org.example.server.Dto.CustomerDTO;
 import org.example.server.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package org.example.server.Service;
 
-import org.example.server.DTO.ConfigurationDTO;
+import org.example.server.Dto.ConfigurationDTO;
 import org.example.server.Entity.Ticket;
 import org.example.server.Repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +40,7 @@ public class TicketPool {
         if (config != null) {
             this.maxCapacity = config.getMaxTicketCapacity();
             this.totalTicketsToRelease = config.getTotalTickets();
+<<<<<<< HEAD
             this.initialTickets = config.getInitialTickets();
 
             for (int i = 1; i <= initialTickets; i++) {
@@ -53,8 +54,10 @@ public class TicketPool {
             }
             System.out.println(initialTickets + " Tickets added to the Ticket pool");
             System.out.println("Current Tickets in the Ticket pool : " + tickets.size());
+=======
+            System.out.println("TicketPool initialized with max capacity: " + maxCapacity + " and total tickets to release: " + totalTicketsToRelease);
+>>>>>>> 01450f842c042e9d4f9b6c56835f9b566a897e8e
         } else {
-            // Handle case when configuration is not found
             System.out.println("No configuration found. TicketPool not initialized.");
         }
     }

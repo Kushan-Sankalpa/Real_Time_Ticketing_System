@@ -15,8 +15,8 @@ public class Vendor {
     private Long id;
 
     private String vendorName;
-
-    private int ticketReleaseRate; // in milliseconds
-
+    private String email;
+    private String password; // Store hashed passwords in production
+    private int ticketReleaseRate;
 
 }

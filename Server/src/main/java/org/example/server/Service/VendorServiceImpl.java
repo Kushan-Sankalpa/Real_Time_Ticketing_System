@@ -1,7 +1,7 @@
 package org.example.server.Service;
 
 import jakarta.annotation.PostConstruct;
-import org.example.server.DTO.VendorDTO;
+import org.example.server.Dto.VendorDTO;
 import org.example.server.Entity.Vendor;
 import org.example.server.Repository.VendorRepository;
 import org.example.server.Entity.Ticket;
