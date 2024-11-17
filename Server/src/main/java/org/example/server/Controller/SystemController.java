@@ -27,11 +27,7 @@ public class SystemController {
             return "No configuration found. Please configure the system first.";
         }
 
-        // Start vendors and customers
-        vendorService.startVendors(config.getNumberOfVendors(), config.getTicketReleaseRate());
-        customerService.startCustomers(config.getNumberOfCustomers(), config.getCustomerRetrievalRate());
-
-        return "System started with " + config.getNumberOfVendors() + " vendors and " + config.getNumberOfCustomers() + " customers.";
+        return "Starting";
     }
 
     @GetMapping("/stop")

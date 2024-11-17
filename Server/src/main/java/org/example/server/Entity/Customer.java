@@ -16,10 +16,8 @@ public class Customer {
     private Long id;
 
     private String customerName;
-
-    private int customerRetrievalRate; // in milliseconds
-
-    private boolean isVIP; // For priority customers
-
-    // Additional fields as needed
+    private String email;
+    private String password; // Store hashed passwords in production
+    private int customerRetrievalRate;
+    private boolean isVIP;
 }

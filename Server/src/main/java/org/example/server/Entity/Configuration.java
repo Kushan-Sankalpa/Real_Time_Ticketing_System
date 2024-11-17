@@ -19,18 +19,12 @@ public class Configuration {
 
     private int totalTickets;
 
-    private int initialTickets;
-
     private int ticketReleaseRate;
 
     private int customerRetrievalRate;
 
     private int maxTicketCapacity;
 
-    private int numberOfVendors;
 
-    private int numberOfCustomers;
-
-    // Additional fields as needed
 }
 
