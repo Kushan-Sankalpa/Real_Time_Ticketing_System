@@ -1,17 +1,20 @@
 package org.example.server.Service;
 
-import org.example.server.Dto.TicketDTO;
+import org.example.server.DTO.TicketDTO;
+import org.example.server.Entity.Ticket;
+import org.example.server.Repository.TicketRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-<<<<<<< HEAD
 @Service
 public class TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
 
-    // Convert Ticket to TicketDTO
     private TicketDTO convertToDTO(Ticket ticket) {
         TicketDTO dto = new TicketDTO();
         dto.setId(ticket.getId());
@@ -22,13 +25,11 @@ public class TicketService {
         return dto;
     }
 
-    // Get all tickets
     public List<TicketDTO> getAllTickets() {
         List<Ticket> tickets = ticketRepository.findAll();
         return tickets.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    // Add a new ticket
     public TicketDTO addTicket(TicketDTO ticketDTO) {
         Ticket ticket = new Ticket();
         ticket.setTicketCode(ticketDTO.getTicketCode());
@@ -38,7 +39,6 @@ public class TicketService {
         return convertToDTO(savedTicket);
     }
 
-    // Purchase a ticket
     public TicketDTO purchaseTicket(Long ticketId, String customerName) {
         Ticket ticket = ticketRepository.findById(ticketId).orElse(null);
         if (ticket != null && !ticket.isSold()) {
@@ -46,18 +46,10 @@ public class TicketService {
             ticket.setCustomerName(customerName);
             Ticket savedTicket = ticketRepository.save(ticket);
             return convertToDTO(savedTicket);
+        } else if (ticket != null && ticket.isSold()) {
+            throw new IllegalArgumentException("Ticket is already sold.");
+        } else {
+            throw new IllegalArgumentException("Ticket not found.");
         }
-        return null;
     }
-
-    // Additional methods as needed
 }
-=======
-public interface TicketService {
-    List<TicketDTO> getAllTickets();
-    TicketDTO addTicket(TicketDTO ticketDTO);
-    TicketDTO purchaseTicket(Long ticketId, String customerName);
-    TicketDTO updateTicket(Long ticketId, TicketDTO ticketDTO, String currentVendorName);
-    void deleteTicket(Long ticketId, String currentVendorName);
-}
->>>>>>> 01450f842c042e9d4f9b6c56835f9b566a897e8e

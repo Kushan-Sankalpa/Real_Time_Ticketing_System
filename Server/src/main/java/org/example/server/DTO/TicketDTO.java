@@ -1,4 +1,4 @@
-package org.example.server.Dto;
+package org.example.server.DTO;
 
 import lombok.Data;
 
@@ -9,5 +9,4 @@ public class TicketDTO {
     private String vendorName;
     private String customerName;
     private boolean isSold;
-
 }

@@ -1,5 +1,4 @@
-package org.example.server.Dto;
-
+package org.example.server.DTO;
 
 import lombok.Data;
 
@@ -8,5 +7,4 @@ public class VendorDTO {
     private Long id;
     private String vendorName;
     private int ticketReleaseRate;
-
 }

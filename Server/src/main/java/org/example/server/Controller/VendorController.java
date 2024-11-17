@@ -1,7 +1,6 @@
 package org.example.server.Controller;
 
-
-import org.example.server.Dto.VendorDTO;
+import org.example.server.DTO.VendorDTO;
 import org.example.server.Service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +19,8 @@ public class VendorController {
         return vendorService.getAllVendors();
     }
 
-    @PostMapping("createVendors")
+    @PostMapping("/createVendors")
     public VendorDTO createVendor(@RequestBody VendorDTO vendorDTO) {
         return vendorService.createVendor(vendorDTO);
     }
-
-    // Additional endpoints as needed
 }

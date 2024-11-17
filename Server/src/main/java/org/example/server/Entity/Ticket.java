@@ -2,12 +2,10 @@ package org.example.server.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tickets")
 @Data
-@NoArgsConstructor
 public class Ticket {
 
     @Id

@@ -1,7 +1,7 @@
 package org.example.server.Service;
 
 import jakarta.annotation.PostConstruct;
-import org.example.server.Dto.CustomerDTO;
+import org.example.server.DTO.CustomerDTO;
 import org.example.server.Entity.Customer;
 import org.example.server.Entity.Ticket;
 import org.example.server.Repository.CustomerRepository;
@@ -29,35 +29,29 @@ public class CustomerServiceImpl implements CustomerService {
         customerExecutor = Executors.newCachedThreadPool();
     }
 
-    // Convert Customer to CustomerDTO
     private CustomerDTO convertToDTO(Customer customer) {
         CustomerDTO dto = new CustomerDTO();
         dto.setId(customer.getId());
         dto.setCustomerName(customer.getCustomerName());
         dto.setCustomerRetrievalRate(customer.getCustomerRetrievalRate());
-        // Removed isVIP field
         return dto;
     }
 
-    // Get all customers
     @Override
     public List<CustomerDTO> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
         return customers.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    // Create a new customer
     @Override
     public CustomerDTO createCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         customer.setCustomerName(customerDTO.getCustomerName());
         customer.setCustomerRetrievalRate(customerDTO.getCustomerRetrievalRate());
-        // Removed isVIP field
         Customer savedCustomer = customerRepository.save(customer);
         return convertToDTO(savedCustomer);
     }
 
-    // Start customer threads
     @Override
     public void startCustomers(int numberOfCustomers, int customerRetrievalRate) {
         for (int i = 1; i <= numberOfCustomers; i++) {
@@ -66,7 +60,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    // Stop customer threads
     @Override
     public void stopCustomers() {
         customerExecutor.shutdownNow();

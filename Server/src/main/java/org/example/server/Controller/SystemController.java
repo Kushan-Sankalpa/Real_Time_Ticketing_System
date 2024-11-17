@@ -21,13 +21,15 @@ public class SystemController {
 
     @GetMapping("/start")
     public String startSystem() {
-        // Fetch latest configuration
         var config = configurationService.getLatestConfiguration();
         if (config == null) {
             return "No configuration found. Please configure the system first.";
         }
 
-        return "Starting";
+        vendorService.startVendors(config.getNumberOfVendors(), config.getTicketReleaseRate());
+        customerService.startCustomers(config.getNumberOfCustomers(), config.getCustomerRetrievalRate());
+
+        return "System started with " + config.getNumberOfVendors() + " vendors and " + config.getNumberOfCustomers() + " customers.";
     }
 
     @GetMapping("/stop")

@@ -1,29 +1,14 @@
-package org.example.server.Dto;
+package org.example.server.DTO;
 
-
-
+import jakarta.validation.constraints.*;
 import lombok.Data;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
-
-
 
 @Data
 public class ConfigurationDTO {
-<<<<<<< HEAD:Server/src/main/java/org/example/server/DTO/ConfigurationDTO.java
 
     @NotNull(message = "Ticket release rate is required.")
     @Positive(message = "Ticket release rate must be positive.")
     private Integer ticketReleaseRate;
-=======
-    private Long id;
-    private int totalTickets;
-    private int ticketReleaseRate;
-    private int customerRetrievalRate;
-    private int maxTicketCapacity;
-
->>>>>>> 01450f842c042e9d4f9b6c56835f9b566a897e8e:Server/src/main/java/org/example/server/Dto/ConfigurationDTO.java
 
     @NotNull(message = "Customer retrieval rate is required.")
     @Positive(message = "Customer retrieval rate must be positive.")
@@ -49,6 +34,5 @@ public class ConfigurationDTO {
     @Positive(message = "Number of customers must be positive.")
     private Integer numberOfCustomers;
 
-    private Long id; // Include this if necessary
+    private Long id;
 }
-

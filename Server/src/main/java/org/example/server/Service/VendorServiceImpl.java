@@ -1,7 +1,7 @@
 package org.example.server.Service;
 
 import jakarta.annotation.PostConstruct;
-import org.example.server.Dto.VendorDTO;
+import org.example.server.DTO.VendorDTO;
 import org.example.server.Entity.Vendor;
 import org.example.server.Repository.VendorRepository;
 import org.example.server.Entity.Ticket;
@@ -29,7 +29,6 @@ public class VendorServiceImpl implements VendorService {
         vendorExecutor = Executors.newCachedThreadPool();
     }
 
-    // Convert Vendor to VendorDTO
     private VendorDTO convertToDTO(Vendor vendor) {
         VendorDTO dto = new VendorDTO();
         dto.setId(vendor.getId());
@@ -38,14 +37,12 @@ public class VendorServiceImpl implements VendorService {
         return dto;
     }
 
-    // Get all vendors
     @Override
     public List<VendorDTO> getAllVendors() {
         List<Vendor> vendors = vendorRepository.findAll();
         return vendors.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    // Create a new vendor
     @Override
     public VendorDTO createVendor(VendorDTO vendorDTO) {
         Vendor vendor = new Vendor();
@@ -55,7 +52,6 @@ public class VendorServiceImpl implements VendorService {
         return convertToDTO(savedVendor);
     }
 
-    // Start vendor threads
     @Override
     public void startVendors(int numberOfVendors, int ticketReleaseRate) {
         for (int i = 1; i <= numberOfVendors; i++) {
@@ -64,7 +60,6 @@ public class VendorServiceImpl implements VendorService {
         }
     }
 
-    // Stop vendor threads
     @Override
     public void stopVendors() {
         vendorExecutor.shutdownNow();

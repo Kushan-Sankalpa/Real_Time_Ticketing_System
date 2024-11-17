@@ -1,11 +1,6 @@
 package org.example.server.Service;
 
-<<<<<<< HEAD
 import org.example.server.DTO.ConfigurationDTO;
-=======
-
-import org.example.server.Dto.ConfigurationDTO;
->>>>>>> 01450f842c042e9d4f9b6c56835f9b566a897e8e
 import org.example.server.Entity.Configuration;
 import org.example.server.Repository.ConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +17,7 @@ public class ConfigurationService {
         if (config == null) {
             return null;
         }
-<<<<<<< HEAD
         return convertToDTO(config);
-=======
-        ConfigurationDTO dto = new ConfigurationDTO();
-        dto.setId(config.getId());
-        dto.setTotalTickets(config.getTotalTickets());
-        dto.setTicketReleaseRate(config.getTicketReleaseRate());
-        dto.setCustomerRetrievalRate(config.getCustomerRetrievalRate());
-        dto.setMaxTicketCapacity(config.getMaxTicketCapacity());
-        return dto;
->>>>>>> 01450f842c042e9d4f9b6c56835f9b566a897e8e
     }
 
     public ConfigurationDTO saveConfiguration(ConfigurationDTO configurationDTO) {
@@ -45,33 +30,28 @@ public class ConfigurationService {
         }
 
         Configuration config = new Configuration();
-        config.setTotalTickets(configurationDTO.getTotalTickets());
         config.setTicketReleaseRate(configurationDTO.getTicketReleaseRate());
         config.setCustomerRetrievalRate(configurationDTO.getCustomerRetrievalRate());
         config.setMaxTicketCapacity(configurationDTO.getMaxTicketCapacity());
-
+        config.setTotalTickets(configurationDTO.getTotalTickets());
+        config.setInitialTickets(configurationDTO.getInitialTickets());
+        config.setNumberOfVendors(configurationDTO.getNumberOfVendors());
+        config.setNumberOfCustomers(configurationDTO.getNumberOfCustomers());
         Configuration savedConfig = configurationRepository.save(config);
         configurationDTO.setId(savedConfig.getId());
         return configurationDTO;
     }
-<<<<<<< HEAD
 
     private ConfigurationDTO convertToDTO(Configuration config) {
         ConfigurationDTO dto = new ConfigurationDTO();
         dto.setId(config.getId());
-        dto.setTotalTickets(config.getTotalTickets());
-        dto.setInitialTickets(config.getInitialTickets());
         dto.setTicketReleaseRate(config.getTicketReleaseRate());
         dto.setCustomerRetrievalRate(config.getCustomerRetrievalRate());
         dto.setMaxTicketCapacity(config.getMaxTicketCapacity());
+        dto.setTotalTickets(config.getTotalTickets());
+        dto.setInitialTickets(config.getInitialTickets());
         dto.setNumberOfVendors(config.getNumberOfVendors());
         dto.setNumberOfCustomers(config.getNumberOfCustomers());
         return dto;
     }
-
-    // Additional methods as needed
-=======
->>>>>>> 01450f842c042e9d4f9b6c56835f9b566a897e8e
 }
-    // Additional methods as needed
-
