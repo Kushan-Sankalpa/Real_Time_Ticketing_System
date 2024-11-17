@@ -1,8 +1,5 @@
 package org.example.server.Entity;
 
-// src/main/java/com/example/ticketingsystem/entity/Configuration.java
-
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,20 +14,13 @@ public class Configuration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int totalTickets;
-
-    private int initialTickets;
-
     private int ticketReleaseRate;
-
     private int customerRetrievalRate;
-
     private int maxTicketCapacity;
-
+    private int totalTickets;
+    private int initialTickets;
     private int numberOfVendors;
-
     private int numberOfCustomers;
 
     // Additional fields as needed
 }
-

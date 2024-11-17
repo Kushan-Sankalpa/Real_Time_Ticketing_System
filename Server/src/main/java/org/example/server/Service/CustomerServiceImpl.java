@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
         dto.setId(customer.getId());
         dto.setCustomerName(customer.getCustomerName());
         dto.setCustomerRetrievalRate(customer.getCustomerRetrievalRate());
-        dto.setIsVIP(customer.isVIP());
+        // Removed isVIP field
         return dto;
     }
 
@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = new Customer();
         customer.setCustomerName(customerDTO.getCustomerName());
         customer.setCustomerRetrievalRate(customerDTO.getCustomerRetrievalRate());
-        customer.setVIP(customerDTO.isVIP());
+        // Removed isVIP field
         Customer savedCustomer = customerRepository.save(customer);
         return convertToDTO(savedCustomer);
     }

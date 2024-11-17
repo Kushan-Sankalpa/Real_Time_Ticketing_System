@@ -18,6 +18,8 @@ public class TicketPool {
     private int totalTicketsToRelease;
     private int totalTicketsAdded;
     private int totalTicketsSold;
+    private int initialTickets;
+    private int vendorTicketsReleased;
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -29,6 +31,7 @@ public class TicketPool {
         this.tickets = new LinkedList<>();
         this.totalTicketsAdded = 0;
         this.totalTicketsSold = 0;
+        this.vendorTicketsReleased = 0;
     }
 
     @PostConstruct
@@ -37,7 +40,7 @@ public class TicketPool {
         if (config != null) {
             this.maxCapacity = config.getMaxTicketCapacity();
             this.totalTicketsToRelease = config.getTotalTickets();
-            int initialTickets = config.getInitialTickets();
+            this.initialTickets = config.getInitialTickets();
 
             for (int i = 1; i <= initialTickets; i++) {
                 Ticket ticket = new Ticket();
@@ -58,15 +61,20 @@ public class TicketPool {
 
     // Synchronized method to add a ticket
     public synchronized boolean addTicket(Ticket ticket) throws InterruptedException {
+        // Check if the total tickets released have reached the limit
+        int totalReleasedTickets = initialTickets + vendorTicketsReleased;
+        if (totalReleasedTickets >= totalTicketsToRelease) {
+            return false; // No more tickets can be added
+        }
+
         while (tickets.size() >= maxCapacity) {
             wait(); // Wait if the pool is full
         }
-        if (totalTicketsAdded >= totalTicketsToRelease) {
-            return false; // No more tickets can be added
-        }
+
         ticketRepository.save(ticket);
         tickets.add(ticket);
         totalTicketsAdded++;
+        vendorTicketsReleased++;
         System.out.println("Vendor added: " + ticket.getTicketCode() + ". Tickets in pool: " + tickets.size());
         notifyAll(); // Notify consumers that a ticket is available
         return true;

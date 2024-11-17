@@ -9,4 +9,3 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // Custom query methods if needed
 }
-

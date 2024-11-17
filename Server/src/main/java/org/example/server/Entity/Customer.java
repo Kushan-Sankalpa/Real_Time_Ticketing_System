@@ -19,7 +19,5 @@ public class Customer {
 
     private int customerRetrievalRate; // in milliseconds
 
-    private boolean isVIP; // For priority customers
 
-    // Additional fields as needed
 }

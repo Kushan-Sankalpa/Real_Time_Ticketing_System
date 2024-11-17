@@ -10,4 +10,3 @@ public class VendorDTO {
     private int ticketReleaseRate;
 
 }
-

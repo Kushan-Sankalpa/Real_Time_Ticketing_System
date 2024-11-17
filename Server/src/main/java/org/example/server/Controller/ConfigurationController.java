@@ -1,6 +1,7 @@
 package org.example.server.Controller;
 
 
+
 import org.example.server.DTO.ConfigurationDTO;
 import org.example.server.Service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
