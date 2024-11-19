@@ -1,10 +1,13 @@
+// File: src/main/java/org/example/server/Controller/TicketController.java
+
 package org.example.server.Controller;
 
 import org.example.server.DTO.TicketDTO;
+import org.example.server.Service.TicketPool;
 import org.example.server.Service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -13,6 +16,9 @@ public class TicketController {
 
     @Autowired
     private TicketService ticketService;
+
+    @Autowired
+    private TicketPool ticketPool;
 
     @GetMapping("/getAllTickets")
     public List<TicketDTO> getAllTickets() {
@@ -27,5 +33,12 @@ public class TicketController {
     @PostMapping("/{ticketId}/purchase")
     public TicketDTO purchaseTicket(@PathVariable Long ticketId, @RequestParam String customerName) {
         return ticketService.purchaseTicket(ticketId, customerName);
+    }
+
+    @GetMapping("/getAvailableTickets")
+    public ResponseEntity<Integer> getAvailableTickets() {
+        int availableTickets = ticketPool.getAvailableTicketsCount();
+        System.out.println("Available tickets: " + availableTickets);
+        return ResponseEntity.ok(availableTickets);
     }
 }

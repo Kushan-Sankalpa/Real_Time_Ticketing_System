@@ -1,3 +1,5 @@
+// File: src/main/java/org/example/server/Service/TicketPool.java
+
 package org.example.server.Service;
 
 import org.example.server.DTO.ConfigurationDTO;
@@ -42,59 +44,78 @@ public class TicketPool {
             this.totalTicketsToRelease = config.getTotalTickets();
             this.initialTickets = config.getInitialTickets();
 
-            for (int i = 1; i <= initialTickets; i++) {
-                Ticket ticket = new Ticket();
-                ticket.setTicketCode("Ticket-" + i);
-                ticket.setVendorName("Initial");
-                ticket.setSold(false);
-                ticketRepository.save(ticket);
-                tickets.add(ticket);
-                totalTicketsAdded++;
+            synchronized (this) {
+                int ticketsToAdd = Math.min(initialTickets, maxCapacity);
+                for (int i = 1; i <= ticketsToAdd; i++) {
+                    Ticket ticket = new Ticket();
+                    ticket.setTicketCode("Initial-Ticket-" + i);
+                    ticket.setVendorName("Initial");
+                    ticket.setSold(false);
+                    tickets.add(ticket);
+                    totalTicketsAdded++;
+                }
+                System.out.println(ticketsToAdd + " initial tickets added to the Ticket pool.");
+                System.out.println("Current Tickets in the Ticket pool: " + tickets.size());
             }
-            System.out.println(initialTickets + " Tickets added to the Ticket pool");
-            System.out.println("Current Tickets in the Ticket pool : " + tickets.size());
         } else {
             System.out.println("No configuration found. TicketPool not initialized.");
         }
     }
 
-    public synchronized boolean addTicket(Ticket ticket) throws InterruptedException {
-        int totalReleasedTickets = initialTickets + vendorTicketsReleased;
-        if (totalReleasedTickets >= totalTicketsToRelease) {
+    public synchronized boolean addTicket(Ticket ticket) {
+        while (tickets.size() >= maxCapacity) {
+            try {
+                System.out.println("Ticket pool is full. Vendor is waiting to add tickets.");
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+        }
+
+        if (totalTicketsAdded >= totalTicketsToRelease) {
+            // All tickets have been added
+            System.out.println("All tickets have been released. Vendor cannot add more tickets.");
             return false;
         }
 
-        while (tickets.size() >= maxCapacity) {
-            wait();
-        }
-
-        ticketRepository.save(ticket);
         tickets.add(ticket);
         totalTicketsAdded++;
         vendorTicketsReleased++;
-        System.out.println("Vendor added: " + ticket.getTicketCode() + ". Tickets in pool: " + tickets.size());
-        notifyAll();
+        System.out.println("Vendor added ticket: " + ticket.getTicketCode() + ". Tickets in pool: " + tickets.size());
+
+        notifyAll(); // Notify waiting customers
         return true;
     }
 
-    public synchronized Ticket removeTicket(String customerName) throws InterruptedException {
+    public synchronized Ticket removeTicket(String customerName) {
         while (tickets.isEmpty()) {
             if (totalTicketsSold >= totalTicketsToRelease) {
+                System.out.println("All tickets sold. Customer " + customerName + " is exiting.");
                 return null;
             }
-            wait();
+            try {
+                System.out.println("No tickets available. Customer " + customerName + " is waiting.");
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return null;
+            }
         }
+
         Ticket ticket = tickets.poll();
-        ticket.setSold(true);
-        ticket.setCustomerName(customerName);
-        ticketRepository.save(ticket);
-        totalTicketsSold++;
-        System.out.println("Customer purchased: " + ticket.getTicketCode() + ". Tickets in pool: " + tickets.size());
-        notifyAll();
+        if (ticket != null) {
+            ticket.setSold(true);
+            ticket.setCustomerName(customerName);
+            totalTicketsSold++;
+            System.out.println("Customer " + customerName + " purchased ticket: " + ticket.getTicketCode() + ". Tickets left in pool: " + tickets.size());
+        }
+
+        notifyAll(); // Notify waiting vendors
         return ticket;
     }
 
-    public synchronized int getCurrentTicketCount() {
+    public synchronized int getAvailableTicketsCount() {
         return tickets.size();
     }
 
@@ -104,5 +125,23 @@ public class TicketPool {
 
     public synchronized int getTotalTicketsSold() {
         return totalTicketsSold;
+    }
+
+    public synchronized int getRemainingTicketsToRelease() {
+        return totalTicketsToRelease - totalTicketsAdded;
+    }
+
+    public synchronized int getTotalTicketsToRelease() {
+        return totalTicketsToRelease;
+    }
+
+    public void reset() {
+        synchronized (this) {
+            tickets.clear();
+            totalTicketsAdded = 0;
+            totalTicketsSold = 0;
+            vendorTicketsReleased = 0;
+        }
+        System.out.println("TicketPool has been reset.");
     }
 }

@@ -1,3 +1,5 @@
+// File: src/main/java/org/example/server/Service/ConfigurationService.java
+
 package org.example.server.Service;
 
 import org.example.server.DTO.ConfigurationDTO;
@@ -53,5 +55,15 @@ public class ConfigurationService {
         dto.setNumberOfVendors(config.getNumberOfVendors());
         dto.setNumberOfCustomers(config.getNumberOfCustomers());
         return dto;
+    }
+
+    public boolean deleteLatestConfiguration() {
+        Configuration config = configurationRepository.findTopByOrderByIdDesc();
+        if (config != null) {
+            configurationRepository.delete(config);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
