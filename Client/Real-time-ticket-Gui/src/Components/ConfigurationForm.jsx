@@ -1,4 +1,5 @@
-// src/components/ConfigurationForm.jsx
+// File: src/components/ConfigurationForm.jsx
+
 import React, { useState } from 'react';
 import apiClient from '../axios';
 import { Form, Button, Alert } from 'react-bootstrap';
@@ -15,6 +16,7 @@ const ConfigurationForm = ({ onSave }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
 
   const validateForm = () => {
     const newErrors = {};
@@ -24,6 +26,8 @@ const ConfigurationForm = ({ onSave }) => {
       maxTicketCapacity,
       totalTickets,
       initialTickets,
+      numberOfCustomers,
+      numberOfVendors,
     } = formData;
 
     if (!ticketReleaseRate || ticketReleaseRate <= 0) {
@@ -45,11 +49,17 @@ const ConfigurationForm = ({ onSave }) => {
     }
     if (
       !initialTickets ||
-      initialTickets <= 0 ||
+      initialTickets < 0 ||
       parseInt(initialTickets) > parseInt(totalTickets)
     ) {
       newErrors.initialTickets =
-        'Initial tickets must be greater than 0 and less than or equal to total tickets.';
+        'Initial tickets must be zero or greater and less than or equal to total tickets.';
+    }
+    if (!numberOfVendors || numberOfVendors <= 0) {
+      newErrors.numberOfVendors = 'Number of vendors must be greater than 0.';
+    }
+    if (!numberOfCustomers || numberOfCustomers <= 0) {
+      newErrors.numberOfCustomers = 'Number of customers must be greater than 0.';
     }
 
     setErrors(newErrors);
@@ -63,13 +73,19 @@ const ConfigurationForm = ({ onSave }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError('');
     if (validateForm()) {
       try {
         const response = await apiClient.post('/configurations/saveConfigurations', formData);
         alert('Configuration saved successfully!');
         onSave(response.data);
       } catch (error) {
-        alert('Failed to save configuration. Please try again.');
+        console.error('Error saving configuration:', error);
+        if (error.response && error.response.data && error.response.data.error) {
+          setSubmitError(error.response.data.error);
+        } else {
+          setSubmitError('Failed to save configuration. Please try again.');
+        }
       }
     }
   };
@@ -79,7 +95,7 @@ const ConfigurationForm = ({ onSave }) => {
       <h2>Configuration Form</h2>
 
       {/* Ticket Release Rate */}
-      <Form.Group>
+      <Form.Group className="mb-3">
         <Form.Label>Ticket Release Rate (ms)</Form.Label>
         <Form.Control
           type="number"
@@ -94,7 +110,7 @@ const ConfigurationForm = ({ onSave }) => {
       </Form.Group>
 
       {/* Customer Retrieval Rate */}
-      <Form.Group>
+      <Form.Group className="mb-3">
         <Form.Label>Customer Retrieval Rate (ms)</Form.Label>
         <Form.Control
           type="number"
@@ -109,7 +125,7 @@ const ConfigurationForm = ({ onSave }) => {
       </Form.Group>
 
       {/* Maximum Ticket Capacity */}
-      <Form.Group>
+      <Form.Group className="mb-3">
         <Form.Label>Maximum Ticket Capacity</Form.Label>
         <Form.Control
           type="number"
@@ -124,7 +140,7 @@ const ConfigurationForm = ({ onSave }) => {
       </Form.Group>
 
       {/* Total Tickets */}
-      <Form.Group>
+      <Form.Group className="mb-3">
         <Form.Label>Total Tickets</Form.Label>
         <Form.Control
           type="number"
@@ -139,7 +155,7 @@ const ConfigurationForm = ({ onSave }) => {
       </Form.Group>
 
       {/* Initial Tickets */}
-      <Form.Group>
+      <Form.Group className="mb-3">
         <Form.Label>Initial Tickets</Form.Label>
         <Form.Control
           type="number"
@@ -154,28 +170,38 @@ const ConfigurationForm = ({ onSave }) => {
       </Form.Group>
 
       {/* Number of Customers */}
-      <Form.Group>
+      <Form.Group className="mb-3">
         <Form.Label>Number of Customers</Form.Label>
         <Form.Control
           type="number"
           name="numberOfCustomers"
           value={formData.numberOfCustomers}
           onChange={handleChange}
+          isInvalid={!!errors.numberOfCustomers}
         />
+        <Form.Control.Feedback type="invalid">
+          {errors.numberOfCustomers}
+        </Form.Control.Feedback>
       </Form.Group>
 
       {/* Number of Vendors */}
-      <Form.Group>
+      <Form.Group className="mb-3">
         <Form.Label>Number of Vendors</Form.Label>
         <Form.Control
           type="number"
           name="numberOfVendors"
           value={formData.numberOfVendors}
           onChange={handleChange}
+          isInvalid={!!errors.numberOfVendors}
         />
+        <Form.Control.Feedback type="invalid">
+          {errors.numberOfVendors}
+        </Form.Control.Feedback>
       </Form.Group>
 
-      <Button variant="primary" type="submit" className="mt-3">
+      {submitError && <Alert variant="danger">{submitError}</Alert>}
+
+      <Button variant="primary" type="submit">
         Save Configuration
       </Button>
     </Form>

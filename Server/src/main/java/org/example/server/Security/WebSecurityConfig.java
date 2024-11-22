@@ -1,3 +1,5 @@
+// File: src/main/java/org/example/server/Security/WebSecurityConfig.java
+
 package org.example.server.Security;
 
 import org.springframework.context.annotation.Bean;
@@ -15,6 +17,13 @@ import java.util.Arrays;
 @Configuration
 public class WebSecurityConfig {
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param http The HttpSecurity object.
+     * @return The configured SecurityFilterChain.
+     * @throws Exception If an error occurs.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -35,10 +44,15 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configures CORS to allow requests from the frontend.
+     *
+     * @return The CorsConfigurationSource.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Frontend URL
+        config.setAllowedOrigins(Arrays.asList("http://localhost:5175")); // Frontend URL
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);

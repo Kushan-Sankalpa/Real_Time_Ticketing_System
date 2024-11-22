@@ -14,6 +14,11 @@ public class ConfigurationService {
     @Autowired
     private ConfigurationRepository configurationRepository;
 
+    /**
+     * Retrieves the latest configuration from the database.
+     *
+     * @return ConfigurationDTO or null if none exists.
+     */
     public ConfigurationDTO getLatestConfiguration() {
         Configuration config = configurationRepository.findTopByOrderByIdDesc();
         if (config == null) {
@@ -22,6 +27,12 @@ public class ConfigurationService {
         return convertToDTO(config);
     }
 
+    /**
+     * Saves a new configuration after validating constraints.
+     *
+     * @param configurationDTO The configuration data.
+     * @return The saved ConfigurationDTO.
+     */
     public ConfigurationDTO saveConfiguration(ConfigurationDTO configurationDTO) {
         // Validation Logic
         if (configurationDTO.getTotalTickets() > configurationDTO.getMaxTicketCapacity()) {
@@ -44,6 +55,12 @@ public class ConfigurationService {
         return configurationDTO;
     }
 
+    /**
+     * Converts Configuration entity to DTO.
+     *
+     * @param config The Configuration entity.
+     * @return The ConfigurationDTO.
+     */
     private ConfigurationDTO convertToDTO(Configuration config) {
         ConfigurationDTO dto = new ConfigurationDTO();
         dto.setId(config.getId());
@@ -57,6 +74,11 @@ public class ConfigurationService {
         return dto;
     }
 
+    /**
+     * Deletes the latest configuration from the database.
+     *
+     * @return True if deletion was successful, false otherwise.
+     */
     public boolean deleteLatestConfiguration() {
         Configuration config = configurationRepository.findTopByOrderByIdDesc();
         if (config != null) {

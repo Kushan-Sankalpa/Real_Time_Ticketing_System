@@ -1,11 +1,13 @@
-// File: src/main/java/org/example/server/Service/VendorServiceImpl.java
+package org.example.server.Implementation;
 
-package org.example.server.Service;
+
 
 import org.example.server.DTO.VendorDTO;
 import org.example.server.Entity.Ticket;
 import org.example.server.Entity.Vendor;
 import org.example.server.Repository.VendorRepository;
+import org.example.server.Service.TicketPool;
+import org.example.server.Service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +77,9 @@ public class VendorServiceImpl implements VendorService {
         return convertToDTO(savedVendor);
     }
 
+    /**
+     * Runnable class for vendor threads.
+     */
     private class VendorRunnable implements Runnable {
         private final String vendorName;
         private final int ticketReleaseRate;

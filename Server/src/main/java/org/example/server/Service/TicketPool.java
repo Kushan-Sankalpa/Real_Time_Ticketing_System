@@ -45,12 +45,16 @@ public class TicketPool {
             this.initialTickets = config.getInitialTickets();
 
             synchronized (this) {
+                // Reset any existing tickets
+                reset();
+
                 int ticketsToAdd = Math.min(initialTickets, maxCapacity);
                 for (int i = 1; i <= ticketsToAdd; i++) {
                     Ticket ticket = new Ticket();
                     ticket.setTicketCode("Initial-Ticket-" + i);
                     ticket.setVendorName("Initial");
                     ticket.setSold(false);
+                    ticketRepository.save(ticket); // Persist to DB
                     tickets.add(ticket);
                     totalTicketsAdded++;
                 }
@@ -62,6 +66,26 @@ public class TicketPool {
         }
     }
 
+    /**
+     * Resets the TicketPool by clearing the in-memory queue and deleting all tickets from the database.
+     */
+    public void reset() {
+        synchronized (this) {
+            tickets.clear();
+            totalTicketsAdded = 0;
+            totalTicketsSold = 0;
+            vendorTicketsReleased = 0;
+            ticketRepository.deleteAll(); // Clear all tickets from DB
+        }
+        System.out.println("TicketPool has been reset.");
+    }
+
+    /**
+     * Adds a ticket to the pool and persists it to the database.
+     *
+     * @param ticket The ticket to be added.
+     * @return True if the ticket was added successfully, false otherwise.
+     */
     public synchronized boolean addTicket(Ticket ticket) {
         while (tickets.size() >= maxCapacity) {
             try {
@@ -79,6 +103,7 @@ public class TicketPool {
             return false;
         }
 
+        ticketRepository.save(ticket); // Persist to DB
         tickets.add(ticket);
         totalTicketsAdded++;
         vendorTicketsReleased++;
@@ -88,6 +113,12 @@ public class TicketPool {
         return true;
     }
 
+    /**
+     * Removes a ticket from the pool, marks it as sold, and updates the database.
+     *
+     * @param customerName The name of the customer purchasing the ticket.
+     * @return The purchased ticket, or null if no tickets are available.
+     */
     public synchronized Ticket removeTicket(String customerName) {
         while (tickets.isEmpty()) {
             if (totalTicketsSold >= totalTicketsToRelease) {
@@ -107,6 +138,7 @@ public class TicketPool {
         if (ticket != null) {
             ticket.setSold(true);
             ticket.setCustomerName(customerName);
+            ticketRepository.save(ticket); // Update in DB
             totalTicketsSold++;
             System.out.println("Customer " + customerName + " purchased ticket: " + ticket.getTicketCode() + ". Tickets left in pool: " + tickets.size());
         }
@@ -115,6 +147,11 @@ public class TicketPool {
         return ticket;
     }
 
+    /**
+     * Gets the current number of available tickets in the pool.
+     *
+     * @return The number of available tickets.
+     */
     public synchronized int getAvailableTicketsCount() {
         return tickets.size();
     }
@@ -133,15 +170,5 @@ public class TicketPool {
 
     public synchronized int getTotalTicketsToRelease() {
         return totalTicketsToRelease;
-    }
-
-    public void reset() {
-        synchronized (this) {
-            tickets.clear();
-            totalTicketsAdded = 0;
-            totalTicketsSold = 0;
-            vendorTicketsReleased = 0;
-        }
-        System.out.println("TicketPool has been reset.");
     }
 }

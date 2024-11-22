@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import apiClient from "../axios";
+import { Card } from 'react-bootstrap';
 
 const TicketStatus = () => {
   const [availableTickets, setAvailableTickets] = useState(0);
@@ -16,16 +17,18 @@ const TicketStatus = () => {
   };
 
   useEffect(() => {
-    fetchTicketCount();
-    const interval = setInterval(fetchTicketCount, 3000);
-    return () => clearInterval(interval);
+    fetchTicketCount(); // Initial fetch
+    const interval = setInterval(fetchTicketCount, 3000); // Poll every 3 seconds
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   return (
-    <div>
-      <h2>Real-Time Ticket Status</h2>
-      <p>Available Tickets: {availableTickets}</p>
-    </div>
+    <Card className="mt-4">
+      <Card.Header>Real-Time Ticket Status</Card.Header>
+      <Card.Body>
+        <h5>Available Tickets: {availableTickets}</h5>
+      </Card.Body>
+    </Card>
   );
 };
 

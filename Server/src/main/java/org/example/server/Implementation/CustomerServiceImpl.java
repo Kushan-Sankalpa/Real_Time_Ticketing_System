@@ -1,11 +1,13 @@
-// File: src/main/java/org/example/server/Service/CustomerServiceImpl.java
+package org.example.server.Implementation;
 
-package org.example.server.Service;
+
 
 import org.example.server.DTO.CustomerDTO;
 import org.example.server.Entity.Customer;
 import org.example.server.Entity.Ticket;
 import org.example.server.Repository.CustomerRepository;
+import org.example.server.Service.CustomerService;
+import org.example.server.Service.TicketPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +77,9 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * Runnable class for customer threads.
+     */
     private class CustomerRunnable implements Runnable {
         private final String customerName;
         private final int customerRetrievalRate;

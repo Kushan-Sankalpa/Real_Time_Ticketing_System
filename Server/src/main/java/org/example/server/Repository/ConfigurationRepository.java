@@ -1,3 +1,5 @@
+
+
 package org.example.server.Repository;
 
 import org.example.server.Entity.Configuration;

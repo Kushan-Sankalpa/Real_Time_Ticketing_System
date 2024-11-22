@@ -1,3 +1,5 @@
+
+
 package org.example.server.DTO;
 
 import lombok.Data;
@@ -6,5 +8,5 @@ import lombok.Data;
 public class CustomerDTO {
     private Long id;
     private String customerName;
-    private int customerRetrievalRate;
+    private int customerRetrievalRate; // in milliseconds
 }

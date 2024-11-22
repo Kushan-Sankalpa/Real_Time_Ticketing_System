@@ -27,11 +27,22 @@ public class TicketService {
         return dto;
     }
 
+    /**
+     * Retrieves all tickets.
+     *
+     * @return List of TicketDTOs.
+     */
     public List<TicketDTO> getAllTickets() {
         List<Ticket> tickets = ticketRepository.findAll();
         return tickets.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    /**
+     * Adds a new ticket via API.
+     *
+     * @param ticketDTO The ticket data.
+     * @return The saved TicketDTO.
+     */
     public TicketDTO addTicket(TicketDTO ticketDTO) {
         Ticket ticket = new Ticket();
         ticket.setTicketCode(ticketDTO.getTicketCode());
@@ -41,6 +52,13 @@ public class TicketService {
         return convertToDTO(savedTicket);
     }
 
+    /**
+     * Purchases a ticket.
+     *
+     * @param ticketId     The ID of the ticket to purchase.
+     * @param customerName The name of the customer purchasing the ticket.
+     * @return The updated TicketDTO.
+     */
     public TicketDTO purchaseTicket(Long ticketId, String customerName) {
         Ticket ticket = ticketRepository.findById(ticketId).orElse(null);
         if (ticket != null && !ticket.isSold()) {

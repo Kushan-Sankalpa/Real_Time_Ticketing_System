@@ -1,3 +1,5 @@
+// File: src/main/java/org/example/server/Controller/ConfigurationController.java
+
 package org.example.server.Controller;
 
 import org.example.server.DTO.ConfigurationDTO;
@@ -18,15 +20,32 @@ public class ConfigurationController {
     @Autowired
     private ConfigurationService configurationService;
 
+    /**
+     * Retrieves the latest configuration.
+     *
+     * @return The latest ConfigurationDTO.
+     */
     @GetMapping("/latest")
     public ConfigurationDTO getLatestConfiguration() {
         return configurationService.getLatestConfiguration();
     }
 
+    /**
+     * Saves a new configuration.
+     *
+     * @param configurationDTO The configuration data.
+     * @return The saved ConfigurationDTO.
+     */
     @PostMapping("/saveConfigurations")
     public ConfigurationDTO saveConfiguration(@Valid @RequestBody ConfigurationDTO configurationDTO) {
         return configurationService.saveConfiguration(configurationDTO);
     }
+
+    /**
+     * Deletes the latest configuration.
+     *
+     * @return A response indicating success or failure.
+     */
     @DeleteMapping("/deleteLatest")
     public ResponseEntity<String> deleteLatestConfiguration() {
         boolean deleted = configurationService.deleteLatestConfiguration();

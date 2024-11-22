@@ -1,3 +1,5 @@
+// File: src/main/java/org/example/server/Exception/GlobalExceptionHandler.java
+
 package org.example.server.Exception;
 
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,12 @@ import java.util.Map;
 @RestControllerAdvice // Use @RestControllerAdvice instead of @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Handle validation errors
+    /**
+     * Handles validation errors and returns a map of field errors.
+     *
+     * @param ex The exception thrown.
+     * @return ResponseEntity with error messages.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
@@ -28,7 +35,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    // Handle custom exceptions
+    /**
+     * Handles illegal argument exceptions and returns an error message.
+     *
+     * @param ex The exception thrown.
+     * @return ResponseEntity with error message.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgumentExceptions(
             IllegalArgumentException ex) {
@@ -39,7 +51,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    // Handle all other exceptions
+    /**
+     * Handles all other exceptions and returns a generic error message.
+     *
+     * @param ex The exception thrown.
+     * @return ResponseEntity with generic error message.
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
         ex.printStackTrace(); // Log the exception
