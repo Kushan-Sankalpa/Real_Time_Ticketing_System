@@ -3,12 +3,12 @@
 package org.example.server.Service;
 
 import org.example.server.DTO.ConfigurationDTO;
+import org.example.server.DTO.TicketStatisticsDTO;
 import org.example.server.Entity.Ticket;
 import org.example.server.Repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -36,47 +36,47 @@ public class TicketPool {
         this.vendorTicketsReleased = 0;
     }
 
-    @PostConstruct
-    public void initialize() {
-        ConfigurationDTO config = configurationService.getLatestConfiguration();
-        if (config != null) {
-            this.maxCapacity = config.getMaxTicketCapacity();
-            this.totalTicketsToRelease = config.getTotalTickets();
-            this.initialTickets = config.getInitialTickets();
-
-            synchronized (this) {
-                // Reset any existing tickets
-                reset();
-
-                int ticketsToAdd = Math.min(initialTickets, maxCapacity);
-                for (int i = 1; i <= ticketsToAdd; i++) {
-                    Ticket ticket = new Ticket();
-                    ticket.setTicketCode("Initial-Ticket-" + i);
-                    ticket.setVendorName("Initial");
-                    ticket.setSold(false);
-                    ticketRepository.save(ticket); // Persist to DB
-                    tickets.add(ticket);
-                    totalTicketsAdded++;
-                }
-                System.out.println(ticketsToAdd + " initial tickets added to the Ticket pool.");
-                System.out.println("Current Tickets in the Ticket pool: " + tickets.size());
-            }
-        } else {
-            System.out.println("No configuration found. TicketPool not initialized.");
+    /**
+     * Initializes the TicketPool based on the provided configuration.
+     *
+     * @param config The configuration DTO containing system parameters.
+     */
+    public synchronized void initialize(ConfigurationDTO config) {
+        if (config == null) {
+            System.out.println("No configuration provided. TicketPool not initialized.");
+            return;
         }
+
+        this.maxCapacity = config.getMaxTicketCapacity();
+        this.totalTicketsToRelease = config.getTotalTickets();
+        this.initialTickets = config.getInitialTickets();
+
+        // Reset any existing tickets and counters
+        reset();
+
+        int ticketsToAdd = Math.min(initialTickets, maxCapacity);
+        for (int i = 1; i <= ticketsToAdd; i++) {
+            Ticket ticket = new Ticket();
+            ticket.setTicketCode("Initial-Ticket-" + i);
+            ticket.setVendorName("Initial");
+            ticket.setSold(false);
+            ticketRepository.save(ticket); // Persist to DB
+            tickets.add(ticket);
+            totalTicketsAdded++;
+        }
+        System.out.println(ticketsToAdd + " initial tickets added to the Ticket pool.");
+        System.out.println("Current Tickets in the Ticket pool: " + tickets.size());
     }
 
     /**
      * Resets the TicketPool by clearing the in-memory queue and deleting all tickets from the database.
      */
-    public void reset() {
-        synchronized (this) {
-            tickets.clear();
-            totalTicketsAdded = 0;
-            totalTicketsSold = 0;
-            vendorTicketsReleased = 0;
-            ticketRepository.deleteAll(); // Clear all tickets from DB
-        }
+    public synchronized void reset() {
+        tickets.clear();
+        totalTicketsAdded = 0;
+        totalTicketsSold = 0;
+        vendorTicketsReleased = 0;
+        ticketRepository.deleteAll(); // Clear all tickets from DB
         System.out.println("TicketPool has been reset.");
     }
 
@@ -170,5 +170,19 @@ public class TicketPool {
 
     public synchronized int getTotalTicketsToRelease() {
         return totalTicketsToRelease;
+    }
+
+
+    /**
+     * Retrieves the current ticket statistics.
+     *
+     * @return TicketStatisticsDTO containing sold, released, and yet-to-release tickets.
+     */
+    public synchronized TicketStatisticsDTO getTicketStatistics() {
+        TicketStatisticsDTO stats = new TicketStatisticsDTO();
+        stats.setTotalTicketsSold(totalTicketsSold);
+        stats.setTotalTicketsReleased(totalTicketsAdded);
+        stats.setTicketsYetToRelease(totalTicketsToRelease - totalTicketsAdded);
+        return stats;
     }
 }

@@ -40,7 +40,7 @@ public class SystemController {
 
         // Reset and initialize TicketPool based on the latest configuration
         ticketPool.reset();
-        ticketPool.initialize();
+        ticketPool.initialize(config); // Pass the configuration here
 
         // Start vendor and customer threads
         vendorService.startVendors(config.getNumberOfVendors(), config.getTicketReleaseRate());
@@ -62,7 +62,8 @@ public class SystemController {
     }
 
     /**
-     * Resets the TicketPool and deletes the latest configuration.
+     * Resets the ticketing system by stopping all threads, resetting the TicketPool,
+     * deleting all tickets from the database, and removing the latest configuration.
      *
      * @return A message indicating the reset status.
      */
@@ -74,6 +75,9 @@ public class SystemController {
 
         // Reset the TicketPool
         ticketPool.reset();
+
+        // Delete all tickets from the database
+        configurationService.deleteAllTickets();
 
         // Delete the latest configuration
         boolean deleted = configurationService.deleteLatestConfiguration();

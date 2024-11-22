@@ -5,6 +5,7 @@ package org.example.server.Service;
 import org.example.server.DTO.ConfigurationDTO;
 import org.example.server.Entity.Configuration;
 import org.example.server.Repository.ConfigurationRepository;
+import org.example.server.Repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ public class ConfigurationService {
 
     @Autowired
     private ConfigurationRepository configurationRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     /**
      * Retrieves the latest configuration from the database.
@@ -87,5 +91,12 @@ public class ConfigurationService {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Deletes all tickets from the database.
+     */
+    public void deleteAllTickets() {
+        ticketRepository.deleteAll();
     }
 }

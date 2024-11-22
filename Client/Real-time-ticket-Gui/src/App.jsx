@@ -1,9 +1,9 @@
 // File: src/App.jsx
 
 import React, { useState } from 'react';
-import ConfigurationForm from './Components/ConfigurationForm';
-import ControlPanel from './Components/ControlPanel';
-import TicketStatus from './Components/TicketStatus';
+import ConfigurationForm from './Components/ConfigurationForm'; // Correct path
+import ControlPanel from './Components/ControlPanel';         // Correct path
+import TicketStatus from './Components/TicketStatus';         // Correct path
 import { Container, Alert } from 'react-bootstrap';
 
 const App = () => {

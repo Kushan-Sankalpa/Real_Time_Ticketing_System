@@ -3,6 +3,7 @@
 package org.example.server.Controller;
 
 import org.example.server.DTO.TicketDTO;
+import org.example.server.DTO.TicketStatisticsDTO;
 import org.example.server.Service.TicketPool;
 import org.example.server.Service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,16 @@ public class TicketController {
         int availableTickets = ticketPool.getAvailableTicketsCount();
         System.out.println("Available tickets: " + availableTickets);
         return ResponseEntity.ok(availableTickets);
+    }
+
+    /**
+     * Retrieves the current ticket statistics.
+     *
+     * @return TicketStatisticsDTO with sold, released, and yet-to-release tickets.
+     */
+    @GetMapping("/statistics")
+    public ResponseEntity<TicketStatisticsDTO> getTicketStatistics() {
+        TicketStatisticsDTO stats = ticketPool.getTicketStatistics();
+        return ResponseEntity.ok(stats);
     }
 }

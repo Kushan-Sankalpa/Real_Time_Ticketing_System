@@ -3,10 +3,12 @@
 import React from 'react';
 import apiClient from '../axios';
 import { Button, ButtonGroup, Card, Table, Modal } from 'react-bootstrap';
+import TicketStatistics from './TicketStatistics'; // Ensure correct path
 
 const ControlPanel = ({ configuration, onReset }) => {
   const [showModal, setShowModal] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
+  const [statistics, setStatistics] = React.useState(null);
 
   const handleStart = async () => {
     try {
@@ -32,21 +34,30 @@ const ControlPanel = ({ configuration, onReset }) => {
     }
   };
 
-  // Modify the handleReset function in ControlPanel.jsx
-
-const handleReset = async () => {
-  if (window.confirm('Are you sure you want to reset the configuration? This will delete all tickets and the latest configuration.')) {
-    try {
-      const response = await apiClient.delete('/system/reset');
-      alert(response.data);
-      onReset(); // Reset the frontend state
-    } catch (error) {
-      console.error('Error resetting the system:', error);
-      alert('Failed to reset the system. Please try again.');
+  const handleReset = async () => {
+    if (window.confirm('Are you sure you want to reset the configuration? This will delete all tickets and the latest configuration.')) {
+      try {
+        const response = await apiClient.delete('/system/reset'); // Updated endpoint
+        alert(response.data);
+        onReset(); // Reset the frontend state
+      } catch (error) {
+        console.error('Error resetting the system:', error);
+        alert('Failed to reset the system. Please try again.');
+      }
     }
-  }
-};
+  };
 
+  const handleShowStatistics = async () => {
+    try {
+      const response = await apiClient.get('/tickets/statistics');
+      setStatistics(response.data);
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error fetching ticket statistics:', error);
+      setModalMessage('Failed to fetch ticket statistics. Please try again.');
+      setShowModal(true);
+    }
+  };
 
   return (
     <div>
@@ -94,7 +105,7 @@ const handleReset = async () => {
           </Card.Body>
         </Card>
       )}
-      <ButtonGroup>
+      <ButtonGroup className="mb-3">
         <Button variant="success" onClick={handleStart}>
           Start
         </Button>
@@ -104,16 +115,25 @@ const handleReset = async () => {
         <Button variant="secondary" onClick={handleReset}>
           Reset
         </Button>
+        <Button variant="info" onClick={handleShowStatistics}>
+          Ticket Statistics
+        </Button>
       </ButtonGroup>
 
-      {/* Modal for Start/Stop Messages */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      {/* Modal for Messages and Statistics */}
+      <Modal show={showModal} onHide={() => { setShowModal(false); setStatistics(null); setModalMessage(''); }}>
         <Modal.Header closeButton>
-          <Modal.Title>System Status</Modal.Title>
+          <Modal.Title>{statistics ? 'Ticket Statistics' : 'System Status'}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Body>
+          {statistics ? (
+            <TicketStatistics statistics={statistics} />
+          ) : (
+            <p>{modalMessage}</p>
+          )}
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => setShowModal(false)}>
+          <Button variant="primary" onClick={() => { setShowModal(false); setStatistics(null); setModalMessage(''); }}>
             Close
           </Button>
         </Modal.Footer>
