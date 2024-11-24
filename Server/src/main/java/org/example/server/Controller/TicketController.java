@@ -1,4 +1,3 @@
-// File: src/main/java/org/example/server/Controller/TicketController.java
 
 package org.example.server.Controller;
 
@@ -21,15 +20,6 @@ public class TicketController {
     @Autowired
     private TicketPool ticketPool;
 
-    @GetMapping("/getAllTickets")
-    public List<TicketDTO> getAllTickets() {
-        return ticketService.getAllTickets();
-    }
-
-    @PostMapping("/addTickets")
-    public TicketDTO addTicket(@RequestBody TicketDTO ticketDTO) {
-        return ticketService.addTicket(ticketDTO);
-    }
 
     @PostMapping("/{ticketId}/purchase")
     public TicketDTO purchaseTicket(@PathVariable Long ticketId, @RequestParam String customerName) {
@@ -48,7 +38,7 @@ public class TicketController {
      *
      * @return TicketStatisticsDTO with sold, released, and yet-to-release tickets.
      */
-    @GetMapping("/statistics")
+    @GetMapping("/statistics") //ok
     public ResponseEntity<TicketStatisticsDTO> getTicketStatistics() {
         TicketStatisticsDTO stats = ticketPool.getTicketStatistics();
         return ResponseEntity.ok(stats);

@@ -37,12 +37,7 @@ public class SystemController {
         if (config == null) {
             return "No configuration found. Please configure the system first.";
         }
-
-        // Reset and initialize TicketPool based on the latest configuration
-        ticketPool.reset();
-        ticketPool.initialize(config); // Pass the configuration here
-
-        // Start vendor and customer threads
+        ticketPool.initialize(config);
         vendorService.startVendors(config.getNumberOfVendors(), config.getTicketReleaseRate());
         customerService.startCustomers(config.getNumberOfCustomers(), config.getCustomerRetrievalRate());
 
@@ -69,17 +64,15 @@ public class SystemController {
      */
     @DeleteMapping("/reset")
     public String resetSystem() {
-        // Stop existing vendors and customers
+
         vendorService.stopVendors();
         customerService.stopCustomers();
 
-        // Reset the TicketPool
+
         ticketPool.reset();
-
-        // Delete all tickets from the database
         configurationService.deleteAllTickets();
-
-        // Delete the latest configuration
+        configurationService.deleteAllVendors();
+        configurationService.deleteAllCustomers();
         boolean deleted = configurationService.deleteLatestConfiguration();
         if (deleted) {
             return "System has been reset successfully.";
@@ -87,4 +80,5 @@ public class SystemController {
             return "No configuration found to reset.";
         }
     }
+
 }

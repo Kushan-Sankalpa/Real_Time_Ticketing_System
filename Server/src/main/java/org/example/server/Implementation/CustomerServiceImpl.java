@@ -1,10 +1,9 @@
 package org.example.server.Implementation;
 
 
-
-import org.example.server.DTO.CustomerDTO;
 import org.example.server.Entity.Customer;
 import org.example.server.Entity.Ticket;
+
 import org.example.server.Repository.CustomerRepository;
 import org.example.server.Service.CustomerService;
 import org.example.server.Service.TicketPool;
@@ -13,44 +12,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
+
 
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public  class CustomerServiceImpl implements CustomerService {
 
-    @Autowired
-    private CustomerRepository customerRepository;
 
     @Autowired
     private TicketPool ticketPool;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
+
     private ExecutorService customerExecutor;
     private List<CustomerRunnable> customerRunnables = new ArrayList<>();
 
-    private CustomerDTO convertToDTO(Customer customer) {
-        CustomerDTO dto = new CustomerDTO();
-        dto.setId(customer.getId());
-        dto.setCustomerName(customer.getCustomerName());
-        dto.setCustomerRetrievalRate(customer.getCustomerRetrievalRate());
-        return dto;
-    }
 
-    @Override
-    public List<CustomerDTO> getAllCustomers() {
-        List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
-        Customer customer = new Customer();
-        customer.setCustomerName(customerDTO.getCustomerName());
-        customer.setCustomerRetrievalRate(customerDTO.getCustomerRetrievalRate());
-        Customer savedCustomer = customerRepository.save(customer);
-        return convertToDTO(savedCustomer);
-    }
 
     @Override
     public void startCustomers(int numberOfCustomers, int customerRetrievalRate) {
@@ -59,16 +40,30 @@ public class CustomerServiceImpl implements CustomerService {
         customerRunnables.clear();
 
         for (int i = 1; i <= numberOfCustomers; i++) {
-            CustomerRunnable customerRunnable = new CustomerRunnable("Customer-" + i, customerRetrievalRate);
+            String customerName = "Customer-" + i;
+
+
+            Optional<Customer> existingCustomer = customerRepository.findByCustomerName(customerName);
+            if (!existingCustomer.isPresent()) {
+
+                Customer customer = new Customer();
+                customer.setCustomerName(customerName);
+                customer.setCustomerRetrievalRate(customerRetrievalRate);
+                customerRepository.save(customer);
+            }
+
+
+            CustomerRunnable customerRunnable = new CustomerRunnable(customerName, customerRetrievalRate);
             customerRunnables.add(customerRunnable);
             customerExecutor.submit(customerRunnable);
         }
     }
 
+
     @Override
     public void stopCustomers() {
         if (customerExecutor != null && !customerExecutor.isShutdown()) {
-            // Stop all CustomerRunnable threads
+
             for (CustomerRunnable customerRunnable : customerRunnables) {
                 customerRunnable.stop();
             }
@@ -104,7 +99,7 @@ public class CustomerServiceImpl implements CustomerService {
                         break;
                     }
                     System.out.println(customerName + " purchased " + ticket.getTicketCode());
-                    Thread.sleep(customerRetrievalRate); // Simulate delay between ticket purchases
+                    Thread.sleep(customerRetrievalRate);
                 }
             } catch (InterruptedException e) {
                 System.out.println(customerName + " interrupted and stopping.");

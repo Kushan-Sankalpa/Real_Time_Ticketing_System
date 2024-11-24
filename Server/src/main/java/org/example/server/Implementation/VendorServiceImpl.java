@@ -1,10 +1,8 @@
 package org.example.server.Implementation;
 
-
-
-import org.example.server.DTO.VendorDTO;
 import org.example.server.Entity.Ticket;
 import org.example.server.Entity.Vendor;
+import org.example.server.Repository.TicketRepository;
 import org.example.server.Repository.VendorRepository;
 import org.example.server.Service.TicketPool;
 import org.example.server.Service.VendorService;
@@ -13,30 +11,50 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 @Service
 public class VendorServiceImpl implements VendorService {
 
     @Autowired
-    private VendorRepository vendorRepository;
+    private TicketPool ticketPool;
 
     @Autowired
-    private TicketPool ticketPool;
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private VendorRepository vendorRepository;
+
+
+
 
     private ExecutorService vendorExecutor;
     private List<VendorRunnable> vendorRunnables = new ArrayList<>();
 
     @Override
     public void startVendors(int numberOfVendors, int ticketReleaseRate) {
-        // Reinitialize vendorExecutor
+
         vendorExecutor = Executors.newCachedThreadPool();
         vendorRunnables.clear();
 
         for (int i = 1; i <= numberOfVendors; i++) {
-            VendorRunnable vendorRunnable = new VendorRunnable("Vendor-" + i, ticketReleaseRate);
+            String vendorName = "Vendor-" + i;
+
+            // Check if vendor already exists
+            Optional<Vendor> existingVendor = vendorRepository.findByVendorName(vendorName);
+            if (!existingVendor.isPresent()) {
+                // Create and save vendor entity
+                Vendor vendor = new Vendor();
+                vendor.setVendorName(vendorName);
+                vendor.setTicketReleaseRate(ticketReleaseRate);
+                vendorRepository.save(vendor);
+            }
+
+            // Start the vendor thread
+            System.out.println("Starting " + vendorName);
+            VendorRunnable vendorRunnable = new VendorRunnable(vendorName, ticketReleaseRate);
             vendorRunnables.add(vendorRunnable);
             vendorExecutor.submit(vendorRunnable);
         }
@@ -54,29 +72,6 @@ public class VendorServiceImpl implements VendorService {
         }
     }
 
-    private VendorDTO convertToDTO(Vendor vendor) {
-        VendorDTO dto = new VendorDTO();
-        dto.setId(vendor.getId());
-        dto.setVendorName(vendor.getVendorName());
-        dto.setTicketReleaseRate(vendor.getTicketReleaseRate());
-        return dto;
-    }
-
-    @Override
-    public List<VendorDTO> getAllVendors() {
-        List<Vendor> vendors = vendorRepository.findAll();
-        return vendors.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public VendorDTO createVendor(VendorDTO vendorDTO) {
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorDTO.getVendorName());
-        vendor.setTicketReleaseRate(vendorDTO.getTicketReleaseRate());
-        Vendor savedVendor = vendorRepository.save(vendor);
-        return convertToDTO(savedVendor);
-    }
-
     /**
      * Runnable class for vendor threads.
      */
@@ -84,10 +79,13 @@ public class VendorServiceImpl implements VendorService {
         private final String vendorName;
         private final int ticketReleaseRate;
         private volatile boolean running = true;
+        private int ticketNumber;
 
         public VendorRunnable(String vendorName, int ticketReleaseRate) {
             this.vendorName = vendorName;
             this.ticketReleaseRate = ticketReleaseRate;
+            // Initialize ticketNumber based on tickets already released by this vendor
+            this.ticketNumber = (int) ticketRepository.countByVendorName(vendorName) + 1;
         }
 
         public void stop() {
@@ -97,13 +95,13 @@ public class VendorServiceImpl implements VendorService {
         @Override
         public void run() {
             try {
-                int ticketNumber = 1;
                 while (running) {
-                    synchronized (ticketPool) {
-                        if (ticketPool.getTotalTicketsAdded() >= ticketPool.getTotalTicketsToRelease()) {
-                            System.out.println(vendorName + " has released all tickets.");
-                            break;
-                        }
+                    int totalTicketsAdded = ticketPool.getTotalTicketsAdded();
+                    int totalTicketsToRelease = ticketPool.getTotalTicketsToRelease();
+
+                    if (totalTicketsAdded >= totalTicketsToRelease) {
+                        System.out.println(vendorName + " has released all tickets. Total Tickets Added: " + totalTicketsAdded + ", Total Tickets To Release: " + totalTicketsToRelease);
+                        break;
                     }
 
                     String ticketCode = vendorName + "-Ticket-" + ticketNumber++;

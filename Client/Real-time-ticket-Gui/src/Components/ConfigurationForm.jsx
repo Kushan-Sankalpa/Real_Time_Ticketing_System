@@ -90,11 +90,26 @@ const ConfigurationForm = ({ onSave }) => {
     }
   };
 
+  const handleDeleteConfiguration = () => {
+    if (window.confirm('Are you sure you want to clear the form?')) {
+      setFormData({
+        ticketReleaseRate: '',
+        customerRetrievalRate: '',
+        maxTicketCapacity: '',
+        totalTickets: '',
+        initialTickets: '',
+        numberOfCustomers: '',
+        numberOfVendors: '',
+      });
+      setErrors({});
+      setSubmitError('');
+    }
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
-      <h2>Configuration Form</h2>
+      <h2 className="text-center mb-4">Configuration Form</h2>
 
-      {/* Ticket Release Rate */}
       <Form.Group className="mb-3">
         <Form.Label>Ticket Release Rate (ms)</Form.Label>
         <Form.Control
@@ -109,7 +124,6 @@ const ConfigurationForm = ({ onSave }) => {
         </Form.Control.Feedback>
       </Form.Group>
 
-      {/* Customer Retrieval Rate */}
       <Form.Group className="mb-3">
         <Form.Label>Customer Retrieval Rate (ms)</Form.Label>
         <Form.Control
@@ -124,7 +138,6 @@ const ConfigurationForm = ({ onSave }) => {
         </Form.Control.Feedback>
       </Form.Group>
 
-      {/* Maximum Ticket Capacity */}
       <Form.Group className="mb-3">
         <Form.Label>Maximum Ticket Capacity</Form.Label>
         <Form.Control
@@ -139,7 +152,6 @@ const ConfigurationForm = ({ onSave }) => {
         </Form.Control.Feedback>
       </Form.Group>
 
-      {/* Total Tickets */}
       <Form.Group className="mb-3">
         <Form.Label>Total Tickets</Form.Label>
         <Form.Control
@@ -154,7 +166,6 @@ const ConfigurationForm = ({ onSave }) => {
         </Form.Control.Feedback>
       </Form.Group>
 
-      {/* Initial Tickets */}
       <Form.Group className="mb-3">
         <Form.Label>Initial Tickets</Form.Label>
         <Form.Control
@@ -169,7 +180,6 @@ const ConfigurationForm = ({ onSave }) => {
         </Form.Control.Feedback>
       </Form.Group>
 
-      {/* Number of Customers */}
       <Form.Group className="mb-3">
         <Form.Label>Number of Customers</Form.Label>
         <Form.Control
@@ -184,7 +194,6 @@ const ConfigurationForm = ({ onSave }) => {
         </Form.Control.Feedback>
       </Form.Group>
 
-      {/* Number of Vendors */}
       <Form.Group className="mb-3">
         <Form.Label>Number of Vendors</Form.Label>
         <Form.Control
@@ -201,9 +210,14 @@ const ConfigurationForm = ({ onSave }) => {
 
       {submitError && <Alert variant="danger">{submitError}</Alert>}
 
-      <Button variant="primary" type="submit">
-        Save Configuration
-      </Button>
+      <div className="text-center">
+        <Button variant="primary" type="submit" className="me-2">
+          Save Configuration
+        </Button>
+        <Button variant="danger" onClick={handleDeleteConfiguration}>
+          Clear Configuration
+        </Button>
+      </div>
     </Form>
   );
 };

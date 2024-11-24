@@ -15,5 +15,5 @@ public class Customer {
     private Long id;
 
     private String customerName;
-    private int customerRetrievalRate; // in milliseconds
+    private int customerRetrievalRate;
 }

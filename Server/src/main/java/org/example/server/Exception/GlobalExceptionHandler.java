@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
-        ex.printStackTrace(); // Log the exception
+        ex.printStackTrace();
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "An unexpected error occurred.");
         return new ResponseEntity<>(errors, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -8,8 +8,7 @@ import org.example.server.Repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class TicketService {
@@ -27,30 +26,6 @@ public class TicketService {
         return dto;
     }
 
-    /**
-     * Retrieves all tickets.
-     *
-     * @return List of TicketDTOs.
-     */
-    public List<TicketDTO> getAllTickets() {
-        List<Ticket> tickets = ticketRepository.findAll();
-        return tickets.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    /**
-     * Adds a new ticket via API.
-     *
-     * @param ticketDTO The ticket data.
-     * @return The saved TicketDTO.
-     */
-    public TicketDTO addTicket(TicketDTO ticketDTO) {
-        Ticket ticket = new Ticket();
-        ticket.setTicketCode(ticketDTO.getTicketCode());
-        ticket.setVendorName(ticketDTO.getVendorName());
-        ticket.setSold(false);
-        Ticket savedTicket = ticketRepository.save(ticket);
-        return convertToDTO(savedTicket);
-    }
 
     /**
      * Purchases a ticket.

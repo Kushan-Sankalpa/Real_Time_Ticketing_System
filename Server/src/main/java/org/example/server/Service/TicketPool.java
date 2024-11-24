@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 @Service
@@ -26,8 +27,7 @@ public class TicketPool {
     @Autowired
     private TicketRepository ticketRepository;
 
-    @Autowired
-    private ConfigurationService configurationService;
+
 
     public TicketPool() {
         this.tickets = new LinkedList<>();
@@ -51,20 +51,32 @@ public class TicketPool {
         this.totalTicketsToRelease = config.getTotalTickets();
         this.initialTickets = config.getInitialTickets();
 
-        // Reset any existing tickets and counters
-        reset();
+        // Load existing tickets from the database
+        List<Ticket> existingTickets = ticketRepository.findByIsSold(false);
+        tickets.clear();
+        tickets.addAll(existingTickets);
 
-        int ticketsToAdd = Math.min(initialTickets, maxCapacity);
-        for (int i = 1; i <= ticketsToAdd; i++) {
-            Ticket ticket = new Ticket();
-            ticket.setTicketCode("Initial-Ticket-" + i);
-            ticket.setVendorName("Initial");
-            ticket.setSold(false);
-            ticketRepository.save(ticket); // Persist to DB
-            tickets.add(ticket);
-            totalTicketsAdded++;
+        // Update totalTicketsAdded and totalTicketsSold based on existing tickets
+        totalTicketsAdded = (int) ticketRepository.count();
+        totalTicketsSold = (int) ticketRepository.countByIsSold(true);
+
+        if (totalTicketsAdded == 0) {
+            // If no tickets have been added before, add initial tickets
+            int ticketsToAdd = Math.min(initialTickets, maxCapacity);
+            for (int i = 1; i <= ticketsToAdd; i++) {
+                Ticket ticket = new Ticket();
+                ticket.setTicketCode("Initial-Ticket-" + i);
+                ticket.setVendorName("Initial");
+                ticket.setSold(false);
+                ticketRepository.save(ticket); // Persist to DB
+                tickets.add(ticket);
+                totalTicketsAdded++;
+            }
+            System.out.println(ticketsToAdd + " initial tickets added to the Ticket pool.");
+        } else {
+            System.out.println("Loaded " + tickets.size() + " existing tickets into the Ticket pool.");
         }
-        System.out.println(ticketsToAdd + " initial tickets added to the Ticket pool.");
+
         System.out.println("Current Tickets in the Ticket pool: " + tickets.size());
     }
 
@@ -87,6 +99,12 @@ public class TicketPool {
      * @return True if the ticket was added successfully, false otherwise.
      */
     public synchronized boolean addTicket(Ticket ticket) {
+        if (totalTicketsAdded >= totalTicketsToRelease) {
+            // All tickets have been added
+            System.out.println("All tickets have been released. Vendor cannot add more tickets.");
+            return false;
+        }
+
         while (tickets.size() >= maxCapacity) {
             try {
                 System.out.println("Ticket pool is full. Vendor is waiting to add tickets.");
@@ -95,12 +113,6 @@ public class TicketPool {
                 Thread.currentThread().interrupt();
                 return false;
             }
-        }
-
-        if (totalTicketsAdded >= totalTicketsToRelease) {
-            // All tickets have been added
-            System.out.println("All tickets have been released. Vendor cannot add more tickets.");
-            return false;
         }
 
         ticketRepository.save(ticket); // Persist to DB
@@ -147,6 +159,7 @@ public class TicketPool {
         return ticket;
     }
 
+
     /**
      * Gets the current number of available tickets in the pool.
      *
@@ -158,14 +171,6 @@ public class TicketPool {
 
     public synchronized int getTotalTicketsAdded() {
         return totalTicketsAdded;
-    }
-
-    public synchronized int getTotalTicketsSold() {
-        return totalTicketsSold;
-    }
-
-    public synchronized int getRemainingTicketsToRelease() {
-        return totalTicketsToRelease - totalTicketsAdded;
     }
 
     public synchronized int getTotalTicketsToRelease() {

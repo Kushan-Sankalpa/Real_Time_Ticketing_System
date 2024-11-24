@@ -1,4 +1,3 @@
-// File: src/main/java/org/example/server/Controller/ConfigurationController.java
 
 package org.example.server.Controller;
 
@@ -20,15 +19,6 @@ public class ConfigurationController {
     @Autowired
     private ConfigurationService configurationService;
 
-    /**
-     * Retrieves the latest configuration.
-     *
-     * @return The latest ConfigurationDTO.
-     */
-    @GetMapping("/latest")
-    public ConfigurationDTO getLatestConfiguration() {
-        return configurationService.getLatestConfiguration();
-    }
 
     /**
      * Saves a new configuration.

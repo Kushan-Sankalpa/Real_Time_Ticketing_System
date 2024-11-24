@@ -1,9 +1,8 @@
 // File: src/App.jsx
 
 import React, { useState } from 'react';
-import ConfigurationForm from './Components/ConfigurationForm'; // Correct path
-import ControlPanel from './Components/ControlPanel';         // Correct path
-import TicketStatus from './Components/TicketStatus';         // Correct path
+import ConfigurationForm from './components/ConfigurationForm';
+import ControlPanel from './components/ControlPanel';
 import { Container, Alert } from 'react-bootstrap';
 
 const App = () => {
@@ -22,7 +21,7 @@ const App = () => {
 
   return (
     <Container className="mt-4">
-      <h1 className="mb-4">Real-Time Ticketing System</h1>
+      <h1 className="mb-4 text-center">Real-Time Ticketing System</h1>
       {showAlert && (
         <Alert variant="info" onClose={() => setShowAlert(false)} dismissible>
           Configuration has been saved. You can now start the system.
@@ -33,7 +32,6 @@ const App = () => {
       ) : (
         <>
           <ControlPanel configuration={configuration} onReset={handleResetConfiguration} />
-          <TicketStatus />
         </>
       )}
     </Container>

@@ -8,5 +8,5 @@ import lombok.Data;
 public class CustomerDTO {
     private Long id;
     private String customerName;
-    private int customerRetrievalRate; // in milliseconds
+    private int customerRetrievalRate;
 }

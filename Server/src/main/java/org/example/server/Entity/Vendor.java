@@ -15,5 +15,5 @@ public class Vendor {
     private Long id;
 
     private String vendorName;
-    private int ticketReleaseRate; // in milliseconds
+    private int ticketReleaseRate;
 }
