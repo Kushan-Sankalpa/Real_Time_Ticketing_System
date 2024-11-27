@@ -21,11 +21,11 @@ public class TicketPool {
             totalTicketsAdded++;
         }
         if(initialTickets > ticketsToAdd){
-            System.out.println("The Tickets you Added  (" + initialTickets + ") exceed maximum capacity or total tickets to release (" + totalTicketsToRelease + "). Only " + ticketsToAdd + " tickets were added.");
+            System.out.println("The Tickets you Added  (" + initialTickets + ") exceed maximum capacity or total tickets to release (" + totalTicketsToRelease + "). Only " + ticketsToAdd + " tickets were added.\n");
         }
         // Display initial ticket status
-        System.out.println(ticketsToAdd+ " Tickets added to the Ticket pool");
-        System.out.println("Current Tickets in the Ticket pool : " + tickets.size());
+        System.out.println("[ "+ ticketsToAdd+ " Tickets added to the Ticket pool ]\n");
+        System.out.println("Current Tickets in the Ticket pool : " + tickets.size()+ "\n");
     }
 
     // Synchronized method to add a ticket
@@ -40,8 +40,8 @@ public class TicketPool {
         }
         tickets.add(ticket);
         totalTicketsAdded++;
-        System.out.println("Vendor added: " + ticket + ". Tickets in pool: " + tickets.size());
-        notifyAll(); // Notify consumers that a ticket is available
+        System.out.println("Vendor added: " + ticket + "  [ Available Tickets in pool: " + tickets.size()+ " ]");
+        notifyAll();
         return true;
     }
 
@@ -56,7 +56,7 @@ public class TicketPool {
         }
         String ticket = tickets.remove(0);
         totalTicketsSold++;
-        System.out.println("Customer purchased: " + ticket + ". Tickets in pool: " + tickets.size());
+        System.out.println("Customer purchased: " + ticket + "  [ Available Tickets in pool: " + tickets.size()+ " ]");
         notifyAll(); // Notify producers that space is available
         return ticket;
     }
@@ -74,7 +74,7 @@ public class TicketPool {
         return totalTicketsSold;
     }
 
-// this new
+
 
 
 

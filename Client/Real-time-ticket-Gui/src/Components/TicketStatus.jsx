@@ -18,7 +18,7 @@ const TicketStatus = () => {
 
   useEffect(() => {
     fetchTicketCount();
-    const interval = setInterval(fetchTicketCount, 3000);
+    const interval = setInterval(fetchTicketCount, 1000);
     return () => clearInterval(interval);
   }, []);
 

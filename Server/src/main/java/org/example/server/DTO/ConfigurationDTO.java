@@ -1,5 +1,3 @@
-
-
 package org.example.server.DTO;
 
 import jakarta.validation.constraints.*;

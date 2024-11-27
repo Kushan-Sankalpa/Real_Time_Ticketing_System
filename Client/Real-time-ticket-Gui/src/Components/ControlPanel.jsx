@@ -5,6 +5,7 @@ import apiClient from '../axios';
 import { Button, ButtonGroup, Card, Table, Modal, Row, Col } from 'react-bootstrap';
 import TicketStatistics from './TicketStatistics';
 import TicketStatus from './TicketStatus';
+import LogDisplay from './LogDisplay'; // Import LogDisplay
 
 const ControlPanel = ({ configuration, onReset }) => {
   const [showModal, setShowModal] = React.useState(false);
@@ -68,74 +69,83 @@ const ControlPanel = ({ configuration, onReset }) => {
     <div>
       <h2 className="text-center mb-4">Control Panel</h2>
       {configuration && (
-        <Row>
-          <Col md={6} className="mb-4">
-            <Card className="mb-3">
-              <Card.Header>Saved Configuration</Card.Header>
-              <Card.Body>
-                <Table striped bordered hover>
-                  <tbody>
-                    <tr>
-                      <th>ID</th>
-                      <td>{configuration.id}</td>
-                    </tr>
-                    <tr>
-                      <th>Ticket Release Rate (ms)</th>
-                      <td>{configuration.ticketReleaseRate}</td>
-                    </tr>
-                    <tr>
-                      <th>Customer Retrieval Rate (ms)</th>
-                      <td>{configuration.customerRetrievalRate}</td>
-                    </tr>
-                    <tr>
-                      <th>Maximum Ticket Capacity</th>
-                      <td>{configuration.maxTicketCapacity}</td>
-                    </tr>
-                    <tr>
-                      <th>Total Tickets</th>
-                      <td>{configuration.totalTickets}</td>
-                    </tr>
-                    <tr>
-                      <th>Initial Tickets</th>
-                      <td>{configuration.initialTickets}</td>
-                    </tr>
-                    <tr>
-                      <th>Number of Vendors</th>
-                      <td>{configuration.numberOfVendors}</td>
-                    </tr>
-                    <tr>
-                      <th>Number of Customers</th>
-                      <td>{configuration.numberOfCustomers}</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
+        <>
+          <Row>
+            <Col md={6} className="mb-4">
+              <Card className="mb-3">
+                <Card.Header>Saved Configuration</Card.Header>
+                <Card.Body>
+                  <Table striped bordered hover>
+                    <tbody>
+                      <tr>
+                        <th>ID</th>
+                        <td>{configuration.id}</td>
+                      </tr>
+                      <tr>
+                        <th>Ticket Release Rate (ms)</th>
+                        <td>{configuration.ticketReleaseRate}</td>
+                      </tr>
+                      <tr>
+                        <th>Customer Retrieval Rate (ms)</th>
+                        <td>{configuration.customerRetrievalRate}</td>
+                      </tr>
+                      <tr>
+                        <th>Maximum Ticket Capacity</th>
+                        <td>{configuration.maxTicketCapacity}</td>
+                      </tr>
+                      <tr>
+                        <th>Total Tickets</th>
+                        <td>{configuration.totalTickets}</td>
+                      </tr>
+                      <tr>
+                        <th>Initial Tickets</th>
+                        <td>{configuration.initialTickets}</td>
+                      </tr>
+                      <tr>
+                        <th>Number of Vendors</th>
+                        <td>{configuration.numberOfVendors}</td>
+                      </tr>
+                      <tr>
+                        <th>Number of Customers</th>
+                        <td>{configuration.numberOfCustomers}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </Card.Body>
+              </Card>
 
-            <div className="text-center">
-              <ButtonGroup className="mb-3">
-                <Button variant="success" onClick={handleStart} className="me-2">
-                  Start
-                </Button>
-                <Button variant="danger" onClick={handleStop} className="me-2">
-                  Stop
-                </Button>
-                <Button variant="secondary" onClick={handleReset}>
-                  Reset
-                </Button>
-              </ButtonGroup>
-            </div>
-          </Col>
+              <div className="text-center">
+                <ButtonGroup className="mb-3">
+                  <Button variant="success" onClick={handleStart} className="me-2">
+                    Start
+                  </Button>
+                  <Button variant="danger" onClick={handleStop} className="me-2">
+                    Stop
+                  </Button>
+                  <Button variant="secondary" onClick={handleReset}>
+                    Reset
+                  </Button>
+                </ButtonGroup>
+              </div>
+            </Col>
 
-          <Col md={6}>
-            <TicketStatus />
-            <div className="text-center mt-3">
-              <Button variant="info" onClick={handleShowStatistics}>
-                Ticket Statistics
-              </Button>
-            </div>
-          </Col>
-        </Row>
+            <Col md={6}>
+              <TicketStatus />
+              <div className="text-center mt-3">
+                <Button variant="info" onClick={handleShowStatistics}>
+                  Ticket Statistics
+                </Button>
+              </div>
+            </Col>
+          </Row>
+
+          {/* Add LogDisplay below the existing content */}
+          <Row className="mt-4">
+            <Col>
+              <LogDisplay />
+            </Col>
+          </Row>
+        </>
       )}
 
       <Modal

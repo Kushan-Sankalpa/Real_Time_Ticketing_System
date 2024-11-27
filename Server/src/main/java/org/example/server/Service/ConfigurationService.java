@@ -1,5 +1,3 @@
-// File: src/main/java/org/example/server/Service/ConfigurationService.java
-
 package org.example.server.Service;
 
 import org.example.server.DTO.ConfigurationDTO;

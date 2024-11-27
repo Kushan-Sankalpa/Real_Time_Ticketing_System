@@ -1,15 +1,29 @@
 // vite.config.js
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080', // Your backend server
-        changeOrigin: true,
-      },
+  resolve: {
+    alias: {
+      
+      global: 'globalThis',
+     
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+    
+      plugins: [
+        NodeGlobalsPolyfillPlugin({
+          process: true,
+          buffer: true,
+        }),
+        NodeModulesPolyfillPlugin(),
+      ],
     },
   },
 });

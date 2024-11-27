@@ -78,9 +78,9 @@ public class Configuration {
         System.out.println("*   Real- Time Event Ticketing System   *");
         System.out.println("*****************************************");
 
-        // Prompt for ticketReleaseRate
+
         while (true){
-            System.out.print("Enter Ticket Release Rate: ");
+            System.out.print("Enter Ticket Release Rate (ms): ");
             String input = scanner.nextLine();
             try{
                 int ticketReleaseRate = Integer.parseInt(input);
@@ -99,7 +99,7 @@ public class Configuration {
         // Prompt for customerRetrievalRate
 
         while(true){
-            System.out.print("Enter Customer Retrieval Rate: ");
+            System.out.print("Enter Customer Retrieval Rate (ms): ");
             String input = scanner.nextLine();
             try{
                 int customerRetrivealRate = Integer.parseInt(input);
@@ -108,10 +108,10 @@ public class Configuration {
                     break;
                 }else{
 
-                    System.out.println("Customer retrival rate must be a positive integer! ");
+                    System.out.println("Customer retrival rate must be a positive integer! \n");
                 }
             }catch(NumberFormatException e){
-                System.out.println("Error!, Invalid input!..Please enter a positive integer");
+                System.out.println("Error!, Invalid input!..Please enter a positive integer\n");
 
             }
         }
@@ -126,11 +126,11 @@ public class Configuration {
                     setMaxTicketCapacity(maxTicketCap);
                     break;
                 }else{
-                    System.out.println("Maximum ticket capacity must be a positive integer");
+                    System.out.println("Maximum ticket capacity must be a positive integer\n");
                 }
 
             }catch(NumberFormatException e){
-                System.out.println("Error!, Invalid input!..Please enter a positive integer");
+                System.out.println("Error!, Invalid input!..Please enter a positive integer\n");
             }
 
         }
@@ -145,10 +145,10 @@ public class Configuration {
                     setTotalTickets(totalTickets);
                     break;
                 }else{
-                    System.out.println("Total number of tickets must be a positive integer and not exceed maximum capacity (" + getMaxTicketCapacity() + ").");
+                    System.out.println("Total number of tickets must be a positive integer and not exceed maximum capacity (" + getMaxTicketCapacity() + ").\n");
                 }
             }catch(NumberFormatException e){
-                System.out.println("Error!, Invalid input!..Please enter a positive integer");
+                System.out.println("Error!, Invalid input!..Please enter a positive integer\n");
             }
         }
 
@@ -163,10 +163,10 @@ public class Configuration {
                     setInitialTickets(initialTickets);
                     break;
                 }else{
-                    System.out.println("Initial tickets (" + initialTickets + ") exceed maximum capacity (" + getMaxTicketCapacity() + "). Only " + maxInitialTickets + " tickets were added.");
+                    System.out.print("Initial tickets (" + initialTickets + ") exceed maximum capacity (" + getMaxTicketCapacity() + "). Please try again!!\n");
                 }
             }catch(NumberFormatException e){
-                System.out.println("Error!, Invalid input!..Please enter a positive integer");
+                System.out.println("Error!, Invalid input!...Please enter a positive integer\n");
             }
 
         }
@@ -181,10 +181,10 @@ public class Configuration {
                     setNumberOfVendors(numOfVendors);
                     break;
                 }else{
-                    System.out.println("Number of vendors must be a positive integer!");
+                    System.out.println("Number of vendors must be a positive integer!\n");
                 }
             }catch(NumberFormatException e){
-                System.out.println("Error!, Invalid input!..Please enter a positive integer");
+                System.out.println("Error!, Invalid input!..Please enter a positive integer\n");
             }
         }
 
@@ -198,11 +198,11 @@ public class Configuration {
                     setNumberOfCustomers(numOfCustomers);
                     break;
                 }else{
-                    System.out.println("Number of customers must be a positive integer!");
+                    System.out.println("Number of customers must be a positive integer!\n");
                 }
 
             }catch(NumberFormatException e){
-                System.out.println("Error!, Invalid input!..Please enter a positive integer");
+                System.out.println("Error!, Invalid input!..Please enter a positive integer\n");
             }
         }
         System.out.println("Configuration Completed. \n");
@@ -212,9 +212,9 @@ public class Configuration {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(this, writer);
-            System.out.println("Configuration saved to " + filename);
+            System.out.println("Configuration saved to " + filename + "\n");
         } catch (IOException e) {
-            System.out.println("Error saving configuration: " + e.getMessage());
+            System.out.println("Error saving configuration: " + e.getMessage() + "\n");
         }
     }
 
@@ -229,5 +229,5 @@ public class Configuration {
             return null;
         }
     }
-// this new
+
 }

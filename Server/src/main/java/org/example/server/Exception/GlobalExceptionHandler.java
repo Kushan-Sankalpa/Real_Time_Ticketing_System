@@ -1,5 +1,3 @@
-// File: src/main/java/org/example/server/Exception/GlobalExceptionHandler.java
-
 package org.example.server.Exception;
 
 import org.springframework.http.HttpStatus;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice // Use @RestControllerAdvice instead of @ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**

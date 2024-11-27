@@ -1,5 +1,3 @@
-// File: src/main/java/org/example/server/Controller/SystemController.java
-
 package org.example.server.Controller;
 
 import org.example.server.DTO.ConfigurationDTO;

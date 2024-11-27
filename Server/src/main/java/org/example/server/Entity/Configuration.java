@@ -13,7 +13,6 @@ public class Configuration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private int ticketReleaseRate;
     private int customerRetrievalRate;
     private int maxTicketCapacity;

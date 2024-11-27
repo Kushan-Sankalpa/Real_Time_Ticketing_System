@@ -11,23 +11,24 @@ public class Vendor extends User {
 
     @Override
     public void run() {
-        System.out.println("Vendor - " + userId + " started.");
+        System.out.println("Vendor-" + userId + " started.");
 
-        while (running) { // Check the control flag
+        while (running) {
             try {
-                String ticket = "Ticket -" + userId + "-" + ticketNumber++;
+                String ticket = "Ticket-" + userId + "-" + ticketNumber++;
                 boolean added = ticketPool.addTicket(ticket);
                 if (!added) {
-                    // No more tickets can be added
-                    System.out.println("Vendor -" + userId + " has released all tickets.");
-                    break; // Exit the loop to terminate the thread
+
+                    System.out.println("Vendor-" + userId + " has released all tickets.");
+                    break;
                 }
-                // Simulate processing time
+
+                System.out.println("*** Vendor-" + userId + " Released " + ticket +"  *** \n");
                 Thread.sleep(ticketReleaseRate);
             } catch (InterruptedException e) {
                 System.out.println("Vendor-" + userId + " interrupted.");
-                Thread.currentThread().interrupt(); // Preserve interrupt status
-                break; // Exit the loop to terminate the thread
+                Thread.currentThread().interrupt();
+                break;
             } catch (Exception e) {
                 System.out.println("Vendor-" + userId + " encountered an error: " + e.getMessage());
             }
@@ -35,4 +36,3 @@ public class Vendor extends User {
         System.out.println("Vendor-" + userId + " stopped.");
     }
 }
-// this new

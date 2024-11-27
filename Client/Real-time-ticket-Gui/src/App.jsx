@@ -1,13 +1,13 @@
 // File: src/App.jsx
 
 import React, { useState } from 'react';
-import ConfigurationForm from './components/ConfigurationForm';
-import ControlPanel from './components/ControlPanel';
+import ConfigurationForm from './Components/ConfigurationForm';
+import ControlPanel from './Components/ControlPanel';
 import { Container, Alert } from 'react-bootstrap';
 
 const App = () => {
   const [configuration, setConfiguration] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState(false); // Corrected here
 
   const handleSaveConfiguration = (config) => {
     setConfiguration(config);
@@ -32,6 +32,10 @@ const App = () => {
       ) : (
         <>
           <ControlPanel configuration={configuration} onReset={handleResetConfiguration} />
+          {/* Include LogDisplay at the root level if desired */}
+          {/* <div className="mt-4">
+            <LogDisplay />
+          </div> */}
         </>
       )}
     </Container>

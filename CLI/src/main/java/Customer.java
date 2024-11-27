@@ -1,4 +1,3 @@
-// Customer.java
 
 public class Customer extends User {
     private final int customerRetrievalRate; // in milliseconds
@@ -10,27 +9,27 @@ public class Customer extends User {
 
     @Override
     public void run() {
-        System.out.println("Customer -" + userId + " started.");
+        System.out.println("Customer-" + userId + " started.");
 
-        while (running) { // Check the control flag
+        while (running) {
             try {
                 String ticket = ticketPool.removeTicket();
                 if (ticket == null) {
-                    // All tickets have been sold
-                    System.out.println("Customer -" + userId + " found no tickets available. Exiting.");
+
+                    System.out.println("Customer-" + userId + " found no tickets available. Exiting.");
                     break;
                 }
-                // Simulate processing the ticket purchase
-                System.out.println("Customer -" + userId + " purchased " + ticket);
+
+                System.out.println("*** Customer-" + userId + " purchased " + ticket  +"  *** \n");
                 Thread.sleep(customerRetrievalRate);
             } catch (InterruptedException e) {
-                System.out.println("Customer -" + userId + " interrupted.");
-                Thread.currentThread().interrupt(); // Preserve interrupt status
-                break; // Exit the loop to terminate the thread
+                System.out.println("Customer-" + userId + " interrupted.");
+                Thread.currentThread().interrupt();
+                break;
             } catch (Exception e) {
-                System.out.println("Customer -" + userId + " encountered an error: " + e.getMessage());
+                System.out.println("Customer-" + userId + " encountered an error: " + e.getMessage());
             }
         }
-        System.out.println("Customer -" + userId + " stopped.");
+        System.out.println("Customer-" + userId + " stopped.");
     }
-}// this new
+}

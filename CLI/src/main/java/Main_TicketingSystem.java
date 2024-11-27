@@ -34,7 +34,7 @@ public class Main_TicketingSystem {
             if (loadedConfig != null) {
                 config = loadedConfig;
             } else {
-                System.out.println("Failed to load configuration. Proceeding with new configuration.");
+                System.out.println("Failed to load configuration. Proceeding with new configuration.!");
                 config.configure(scanner); // Pass scanner
             }
         } else {
@@ -93,7 +93,6 @@ public class Main_TicketingSystem {
             customerThread.start();
         }
 
-        System.out.println("Vendors and Customers have started.");
     }
 
     // Synchronized method to stop vendor and customer threads

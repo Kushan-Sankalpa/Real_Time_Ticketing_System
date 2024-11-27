@@ -19,4 +19,3 @@ public abstract class User implements Runnable {
     // Abstract run method to be implemented by subclasses
     public abstract void run();
 }
-// this new

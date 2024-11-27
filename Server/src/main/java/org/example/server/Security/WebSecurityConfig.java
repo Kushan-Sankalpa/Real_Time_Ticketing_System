@@ -1,5 +1,3 @@
-// File: src/main/java/org/example/server/Security/WebSecurityConfig.java
-
 package org.example.server.Security;
 
 import org.springframework.context.annotation.Bean;
@@ -17,25 +15,19 @@ import java.util.Arrays;
 @Configuration
 public class WebSecurityConfig {
 
-    /**
-     * Configures the security filter chain.
-     *
-     * @param http The HttpSecurity object.
-     * @return The configured SecurityFilterChain.
-     * @throws Exception If an error occurs.
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
+                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.sameOrigin()) // Allow H2 console frames
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -44,22 +36,16 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    /**
-     * Configures CORS to allow requests from the frontend.
-     *
-     * @return The CorsConfigurationSource.
-     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5174")); // Frontend URL
+        config.setAllowedOrigins(Arrays.asList("http://localhost:5176"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
-        source.registerCorsConfiguration("/h2-console/**", config); // Include if necessary
+        source.registerCorsConfiguration("/**", config);
 
         return source;
     }

@@ -7,6 +7,7 @@ import org.example.server.Repository.VendorRepository;
 import org.example.server.Service.TicketPool;
 import org.example.server.Service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,8 +28,8 @@ public class VendorServiceImpl implements VendorService {
     @Autowired
     private VendorRepository vendorRepository;
 
-
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate; // Added
 
     private ExecutorService vendorExecutor;
     private List<VendorRunnable> vendorRunnables = new ArrayList<>();
@@ -42,17 +43,14 @@ public class VendorServiceImpl implements VendorService {
         for (int i = 1; i <= numberOfVendors; i++) {
             String vendorName = "Vendor-" + i;
 
-            // Check if vendor already exists
             Optional<Vendor> existingVendor = vendorRepository.findByVendorName(vendorName);
             if (!existingVendor.isPresent()) {
-                // Create and save vendor entity
                 Vendor vendor = new Vendor();
                 vendor.setVendorName(vendorName);
                 vendor.setTicketReleaseRate(ticketReleaseRate);
                 vendorRepository.save(vendor);
             }
 
-            // Start the vendor thread
             System.out.println("Starting " + vendorName);
             VendorRunnable vendorRunnable = new VendorRunnable(vendorName, ticketReleaseRate);
             vendorRunnables.add(vendorRunnable);
@@ -63,7 +61,6 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public void stopVendors() {
         if (vendorExecutor != null && !vendorExecutor.isShutdown()) {
-            // Stop all VendorRunnable threads
             for (VendorRunnable vendorRunnable : vendorRunnables) {
                 vendorRunnable.stop();
             }
@@ -72,9 +69,6 @@ public class VendorServiceImpl implements VendorService {
         }
     }
 
-    /**
-     * Runnable class for vendor threads.
-     */
     private class VendorRunnable implements Runnable {
         private final String vendorName;
         private final int ticketReleaseRate;
@@ -84,7 +78,6 @@ public class VendorServiceImpl implements VendorService {
         public VendorRunnable(String vendorName, int ticketReleaseRate) {
             this.vendorName = vendorName;
             this.ticketReleaseRate = ticketReleaseRate;
-            // Initialize ticketNumber based on tickets already released by this vendor
             this.ticketNumber = (int) ticketRepository.countByVendorName(vendorName) + 1;
         }
 
@@ -100,7 +93,13 @@ public class VendorServiceImpl implements VendorService {
                     int totalTicketsToRelease = ticketPool.getTotalTicketsToRelease();
 
                     if (totalTicketsAdded >= totalTicketsToRelease) {
-                        System.out.println(vendorName + " has released all tickets. Total Tickets Added: " + totalTicketsAdded + ", Total Tickets To Release: " + totalTicketsToRelease);
+                        String logMessage = vendorName + " has released all tickets. Total Tickets Added: ";
+                        messagingTemplate.convertAndSend("/topic/logs", logMessage);
+
+                        logMessage = vendorName + " stopped.";
+                        messagingTemplate.convertAndSend("/topic/logs", logMessage);
+
+                        System.out.println(logMessage);
                         break;
                     }
 
@@ -113,20 +112,23 @@ public class VendorServiceImpl implements VendorService {
                     boolean added = ticketPool.addTicket(ticket);
                     if (!added) {
                         System.out.println(vendorName + " waiting to add tickets.");
-                        Thread.sleep(500); // Wait before retrying if the pool is full
+                        Thread.sleep(500);
                         continue;
                     }
 
-                    System.out.println(vendorName + " released ticket: " + ticketCode);
-                    Thread.sleep(ticketReleaseRate); // Release tickets based on the configured rate
+                    Thread.sleep(ticketReleaseRate);
                 }
             } catch (InterruptedException e) {
-                System.out.println(vendorName + " interrupted and stopping.");
+                String logMessage = vendorName + " interrupted and stopping.";
+                messagingTemplate.convertAndSend("/topic/logs", logMessage);
                 Thread.currentThread().interrupt();
             } catch (Exception e) {
-                System.out.println(vendorName + " encountered an error: " + e.getMessage());
+                String logMessage = vendorName + " encountered an error: " + e.getMessage();
+                messagingTemplate.convertAndSend("/topic/logs", logMessage);
             } finally {
-                System.out.println(vendorName + " stopped.");
+                String logMessage = vendorName + " stopped.";
+                messagingTemplate.convertAndSend("/topic/logs", logMessage);
+                System.out.println(logMessage);
             }
         }
     }
