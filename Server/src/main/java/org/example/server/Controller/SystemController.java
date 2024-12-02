@@ -8,6 +8,11 @@ import org.example.server.Service.TicketPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * Controller for managing the lifecycle of the ticketing system.
+ * Handles operations such as starting, stopping, and resetting the system.
+ */
 @RestController
 @RequestMapping("/api/system")
 public class SystemController {
@@ -23,6 +28,7 @@ public class SystemController {
 
     @Autowired
     private TicketPool ticketPool;
+
 
     /**
      * Starts the ticketing system by initializing the TicketPool and starting vendor and customer threads.
@@ -42,6 +48,8 @@ public class SystemController {
         return "System started with " + config.getNumberOfVendors() + " vendors and " + config.getNumberOfCustomers() + " customers.";
     }
 
+
+
     /**
      * Stops the ticketing system by stopping vendor and customer threads.
      *
@@ -53,6 +61,8 @@ public class SystemController {
         customerService.stopCustomers();
         return "System stopped.";
     }
+
+
 
     /**
      * Resets the ticketing system by stopping all threads, resetting the TicketPool,

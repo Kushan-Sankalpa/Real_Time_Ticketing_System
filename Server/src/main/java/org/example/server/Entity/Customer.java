@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * Entity class representing a Customer stored in the database.
+ */
 @Entity
 @Table(name = "customers")
 @Data

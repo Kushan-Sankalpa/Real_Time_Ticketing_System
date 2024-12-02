@@ -1,10 +1,10 @@
-// File: src/components/ConfigurationForm.jsx
 
 import React, { useState } from 'react';
 import apiClient from '../axios';
 import { Form, Button, Alert } from 'react-bootstrap';
 
 const ConfigurationForm = ({ onSave }) => {
+  // State variables for form data, errors, and submission error
   const [formData, setFormData] = useState({
     ticketReleaseRate: '',
     customerRetrievalRate: '',
@@ -18,6 +18,8 @@ const ConfigurationForm = ({ onSave }) => {
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
 
+
+  // Function to validate the form inputs
   const validateForm = () => {
     const newErrors = {};
     const {
@@ -30,6 +32,7 @@ const ConfigurationForm = ({ onSave }) => {
       numberOfVendors,
     } = formData;
 
+    // Validation logic for each field
     if (!ticketReleaseRate || ticketReleaseRate <= 0) {
       newErrors.ticketReleaseRate = 'Ticket release rate must be greater than 0.';
     }
@@ -66,11 +69,14 @@ const ConfigurationForm = ({ onSave }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handler for input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+
+  // Handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError('');
@@ -89,7 +95,7 @@ const ConfigurationForm = ({ onSave }) => {
       }
     }
   };
-
+   // Handler to clear the form fields
   const handleDeleteConfiguration = () => {
     if (window.confirm('Are you sure you want to clear the form?')) {
       setFormData({

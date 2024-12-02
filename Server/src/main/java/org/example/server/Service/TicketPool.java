@@ -7,11 +7,14 @@ import org.example.server.Repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * Service class responsible for managing the Ticket Pool.
+ * Handles operations like ticket initialization, addition, removal, and statistics.
+ */
 @Service
 public class TicketPool {
 
@@ -34,6 +37,13 @@ public class TicketPool {
         this.totalTicketsSold = 0;
     }
 
+
+    /**
+     * Initializes the Ticket Pool based on the provided configuration.
+     * Loads existing tickets from the database or adds initial tickets if none exist.
+     *
+     * @param config The configuration details for the system.
+     */
     public synchronized void initialize(ConfigurationDTO config) {
         if (config == null) {
             System.out.println("No configuration provided. TicketPool not initialized.");
@@ -70,6 +80,11 @@ public class TicketPool {
         System.out.println("Current Tickets in the Ticket pool: " + tickets.size());
     }
 
+
+    /**
+     * Resets the Ticket Pool by clearing the queue and deleting all tickets from the database.
+     */
+
     public synchronized void reset() {
         tickets.clear();
         totalTicketsAdded = 0;
@@ -78,6 +93,16 @@ public class TicketPool {
         System.out.println("TicketPool has been reset.");
     }
 
+
+
+
+    /**
+     * Adds a ticket to the pool.
+     * Waits if the pool is full and notifies other threads once the ticket is added.
+     *
+     * @param ticket The ticket to be added to the pool.
+     * @return True if the ticket was added successfully, otherwise false.
+     */
     public synchronized boolean addTicket(Ticket ticket) {
         if (totalTicketsAdded >= totalTicketsToRelease) {
             System.out.println("All tickets have been released. Vendor cannot add more tickets.");
@@ -106,6 +131,14 @@ public class TicketPool {
         notifyAll();
         return true;
     }
+
+    /**
+     * Removes a ticket from the pool.
+     * Waits if no tickets are available and notifies other threads once a ticket is removed.
+     *
+     * @param customerName The name of the customer purchasing the ticket.
+     * @return The purchased ticket, or null if no tickets are available or all tickets are sold.
+     */
 
     public synchronized Ticket removeTicket(String customerName) {
         while (tickets.isEmpty()) {
@@ -151,6 +184,11 @@ public class TicketPool {
         return totalTicketsToRelease;
     }
 
+    /**
+     * Retrieves the ticket statistics including sold, released, and yet to release tickets.
+     *
+     * @return A TicketStatisticsDTO object containing the statistics.
+     */
     public synchronized TicketStatisticsDTO getTicketStatistics() {
         TicketStatisticsDTO stats = new TicketStatisticsDTO();
         stats.setTotalTicketsSold(totalTicketsSold);

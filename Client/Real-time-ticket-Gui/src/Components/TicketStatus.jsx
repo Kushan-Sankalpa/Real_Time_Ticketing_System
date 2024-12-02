@@ -1,5 +1,3 @@
-// File: src/components/TicketStatus.jsx
-
 import React, { useState, useEffect } from 'react';
 import apiClient from '../axios';
 import { Card } from 'react-bootstrap';
@@ -7,6 +5,7 @@ import { Card } from 'react-bootstrap';
 const TicketStatus = () => {
   const [availableTickets, setAvailableTickets] = useState(0);
 
+  // Function to fetch the current available ticket count
   const fetchTicketCount = async () => {
     try {
       const response = await apiClient.get('/tickets/getAvailableTickets');
@@ -18,6 +17,8 @@ const TicketStatus = () => {
 
   useEffect(() => {
     fetchTicketCount();
+
+    // Poll the ticket count every second
     const interval = setInterval(fetchTicketCount, 1000);
     return () => clearInterval(interval);
   }, []);

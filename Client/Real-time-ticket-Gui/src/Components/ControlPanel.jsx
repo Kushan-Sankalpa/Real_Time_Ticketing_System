@@ -1,17 +1,18 @@
-// File: src/components/ControlPanel.jsx
-
 import React from 'react';
 import apiClient from '../axios';
 import { Button, ButtonGroup, Card, Table, Modal, Row, Col } from 'react-bootstrap';
 import TicketStatistics from './TicketStatistics';
 import TicketStatus from './TicketStatus';
-import LogDisplay from './LogDisplay'; // Import LogDisplay
+import LogDisplay from './LogDisplay';
 
 const ControlPanel = ({ configuration, onReset }) => {
+
+  // State variables for modal display and content
   const [showModal, setShowModal] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
   const [statistics, setStatistics] = React.useState(null);
 
+ // Handler to start the ticketing system
   const handleStart = async () => {
     try {
       const response = await apiClient.get('/system/start');
@@ -24,6 +25,7 @@ const ControlPanel = ({ configuration, onReset }) => {
     }
   };
 
+  // Handler to stop the ticketing system
   const handleStop = async () => {
     try {
       const response = await apiClient.get('/system/stop');
@@ -36,6 +38,7 @@ const ControlPanel = ({ configuration, onReset }) => {
     }
   };
 
+  // Handler to reset the system configuration
   const handleReset = async () => {
     if (
       window.confirm(
@@ -53,6 +56,8 @@ const ControlPanel = ({ configuration, onReset }) => {
     }
   };
 
+
+  // Handler to fetch and display ticket statistics
   const handleShowStatistics = async () => {
     try {
       const response = await apiClient.get('/tickets/statistics');
@@ -139,7 +144,7 @@ const ControlPanel = ({ configuration, onReset }) => {
             </Col>
           </Row>
 
-          {/* Add LogDisplay below the existing content */}
+
           <Row className="mt-4">
             <Col>
               <LogDisplay />

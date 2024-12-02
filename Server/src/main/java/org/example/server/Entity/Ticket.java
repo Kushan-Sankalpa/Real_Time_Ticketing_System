@@ -3,6 +3,9 @@ package org.example.server.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/**
+ * Entity class representing a Ticket stored in the database.
+ */
 @Entity
 @Table(name = "tickets")
 @Data

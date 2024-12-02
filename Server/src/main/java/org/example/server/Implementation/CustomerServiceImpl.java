@@ -15,6 +15,9 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Implementation of the CustomerService interface for managing customer interactions with the ticket pool.
+ */
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -25,11 +28,19 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate; // Added
+    private SimpMessagingTemplate messagingTemplate;
 
     private ExecutorService customerExecutor;
     private List<CustomerRunnable> customerRunnables = new ArrayList<>();
 
+
+    /**
+     * Starts customer threads to interact with the ticket pool.
+     * Customers retrieve tickets at a specified rate.
+     *
+     * @param numberOfCustomers The number of customer threads to start.
+     * @param customerRetrievalRate The interval (in milliseconds) at which each customer retrieves tickets.
+     */
     @Override
     public void startCustomers(int numberOfCustomers, int customerRetrievalRate) {
         customerExecutor = Executors.newCachedThreadPool();
@@ -52,6 +63,9 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * Stops all customer threads and clears the list of runnables.
+     */
     @Override
     public void stopCustomers() {
         if (customerExecutor != null && !customerExecutor.isShutdown()) {
@@ -63,6 +77,10 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+
+    /**
+     * Inner class representing a customer's runnable task.
+     */
     private class CustomerRunnable implements Runnable {
         private final String customerName;
         private final int customerRetrievalRate;
@@ -77,6 +95,10 @@ public class CustomerServiceImpl implements CustomerService {
             running = false;
         }
 
+        /**
+         * Main logic for customer threads.
+         * Customers attempt to purchase tickets from the ticket pool.
+         */
         @Override
         public void run() {
             try {

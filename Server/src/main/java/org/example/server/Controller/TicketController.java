@@ -9,6 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
+/**
+ * Controller for handling ticket-related operations such as purchase,
+ * retrieving available tickets, and viewing ticket statistics.
+ */
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketController {
@@ -20,11 +25,25 @@ public class TicketController {
     private TicketPool ticketPool;
 
 
+    /**
+     * Handles ticket purchase requests.
+     *
+     * @param ticketId The ID of the ticket to purchase.
+     * @param customerName The name of the customer making the purchase.
+     * @return Details of the purchased ticket.
+     */
     @PostMapping("/{ticketId}/purchase")
     public TicketDTO purchaseTicket(@PathVariable Long ticketId, @RequestParam String customerName) {
         return ticketService.purchaseTicket(ticketId, customerName);
     }
 
+
+
+    /**
+     * Gets the number of available tickets.
+     *
+     * @return The count of available tickets in the pool.
+     */
     @GetMapping("/getAvailableTickets")
     public ResponseEntity<Integer> getAvailableTickets() {
         int availableTickets = ticketPool.getAvailableTicketsCount();

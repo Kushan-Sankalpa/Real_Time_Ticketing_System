@@ -9,6 +9,9 @@ import org.example.server.Repository.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing Configuration-related operations.
+ */
 @Service
 public class ConfigurationService {
 

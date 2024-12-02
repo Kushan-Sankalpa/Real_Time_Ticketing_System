@@ -7,9 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import jakarta.validation.Valid;
 
+/**
+ * Controller for managing system configurations.
+ * Handles requests to save and delete configurations in the ticketing system.
+ */
 @RestController
 @RequestMapping("/api/configurations")
 @Validated

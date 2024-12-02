@@ -4,10 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * Entity class representing the Configuration settings stored in the database.
+ */
 @Entity
 @Table(name = "configurations")
 @Data
 @NoArgsConstructor
+
 public class Configuration {
 
     @Id

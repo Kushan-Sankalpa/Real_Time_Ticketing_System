@@ -1,15 +1,18 @@
-// TicketingSystem.java
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
+/**
+ * Main class for the Real-Time Event Ticketing System.
+ * Handles user interactions and system control.
+ */
 public class Main_TicketingSystem {
     private Configuration config;
     private TicketPool ticketPool;
     private List<Thread> userThreads;
     private List<User> users;
-    private Scanner scanner; // Shared Scanner instance
+    private Scanner scanner;
 
     public Main_TicketingSystem () {
         userThreads = new ArrayList<>();
@@ -17,7 +20,11 @@ public class Main_TicketingSystem {
         scanner = new Scanner(System.in);
     }
 
-    // Method to start the system
+
+    /**
+     * Starts the ticketing system.
+     * Handles configuration and initializes user threads.
+     */
     public void start() {
         config = new Configuration();
 
@@ -35,20 +42,20 @@ public class Main_TicketingSystem {
                 config = loadedConfig;
             } else {
                 System.out.println("Failed to load configuration. Proceeding with new configuration.!");
-                config.configure(scanner); // Pass scanner
+                config.configure(scanner);
             }
         } else {
-            config.configure(scanner); // Pass scanner
+            config.configure(scanner);
         }
 
-        // Initialize TicketPool with initialTickets, maxTicketCapacity, and totalTickets
+
         ticketPool = new TicketPool(
                 config.getInitialTickets(),
                 config.getMaxTicketCapacity(),
                 config.getTotalTickets()
         );
 
-        // Optionally, save the configuration
+
         System.out.print("Do you want to save the current configuration? (yes/no): ");
         String saveConfigChoice = scanner.nextLine().trim().toLowerCase();
         if (saveConfigChoice.equals("yes")) {
@@ -59,19 +66,22 @@ public class Main_TicketingSystem {
 
         System.out.println("Enter commands: start, stop, status, exit");
 
-        // Start the input handler thread
+
         Thread inputThread = new Thread(new InputHandler(this, scanner), "InputHandler");
         inputThread.start();
     }
 
-    // Synchronized method to start vendor and customer threads
+    /**
+     * Starts vendor and customer threads.
+     * Synchronized to prevent concurrent modifications.
+     */
     public synchronized void startUsers() {
         if (!userThreads.isEmpty()) {
             System.out.println("System is already running.");
             return;
         }
 
-        // Define the number of vendors and customers
+
         int numberOfVendors = config.getNumberOfVendors();
         int numberOfCustomers = config.getNumberOfCustomers();
 
@@ -95,41 +105,46 @@ public class Main_TicketingSystem {
 
     }
 
-    // Synchronized method to stop vendor and customer threads
+    /**
+     * Stops all vendor and customer threads.
+     * Synchronized to prevent concurrent modifications.
+     */
     public synchronized void stopUsers() {
         if (userThreads.isEmpty()) {
             System.out.println("System is not running.");
             return;
         }
 
-        // Stop all users by setting their running flag to false
+
         for (User user : users) {
             user.stop();
         }
 
-        // Interrupt all threads to wake them up if they're blocked
+
         for (Thread thread : userThreads) {
             thread.interrupt();
         }
 
-        // Optionally, wait for threads to finish
+
         for (Thread thread : userThreads) {
             try {
-                thread.join(); // Wait for the thread to terminate
+                thread.join();
             } catch (InterruptedException e) {
                 System.out.println("Interrupted while waiting for threads to terminate.");
-                Thread.currentThread().interrupt(); // Preserve interrupt status
+                Thread.currentThread().interrupt();
             }
         }
 
-        // Clear the lists to allow for garbage collection and potential restart
         userThreads.clear();
         users.clear();
 
         System.out.println("Vendors and Customers have stopped.");
     }
 
-    // Synchronized method to display current ticket count
+    /**
+     * Displays the current status of tickets in the system.
+     * Synchronized to prevent inconsistent reads.
+     */
     public synchronized void displayStatus() {
         int currentTickets = ticketPool.getCurrentTicketCount();
         int totalTicketsAdded = ticketPool.getTotalTicketsAdded();
@@ -139,11 +154,20 @@ public class Main_TicketingSystem {
         System.out.println("Total Tickets Sold: " + totalTicketsSold);
     }
 
-    // Inner class for handling user inputs
+    /**
+     * Inner class for handling user inputs.
+     * Processes commands like start, stop, status, and exit.
+     */
     private class InputHandler implements Runnable {
         private final Main_TicketingSystem ticketingSystem;
-        private final Scanner scanner; // Shared scanner
+        private final Scanner scanner;
 
+        /**
+         * Constructs a new InputHandler.
+         *
+         * @param ticketingSystem the main ticketing system instance.
+         * @param scanner         the shared Scanner object.
+         */
         public InputHandler(Main_TicketingSystem ticketingSystem, Scanner scanner) {
             this.ticketingSystem = ticketingSystem;
             this.scanner = scanner;
@@ -174,11 +198,16 @@ public class Main_TicketingSystem {
                         break;
                     default:
                         System.out.println("Unknown command. Available commands: start, stop, status, exit");
-                } // this new
+                }
             }
         }
     }
 
+    /**
+     * The main method to run the ticketing system.
+     *
+     * @param args command-line arguments (not used).
+     */
     public static void main(String[] args) {
         Main_TicketingSystem system = new Main_TicketingSystem();
         system.start();

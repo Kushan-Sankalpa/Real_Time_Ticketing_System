@@ -7,13 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-
+/**
+ * Service class for managing ticket operations.
+ * Handles ticket purchase and conversion between entity and DTO.
+ */
 @Service
 public class TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
 
+
+    /**
+     * Converts a Ticket entity to a TicketDTO.
+     *
+     * @param ticket The Ticket entity to be converted.
+     * @return The corresponding TicketDTO.
+     */
     private TicketDTO convertToDTO(Ticket ticket) {
         TicketDTO dto = new TicketDTO();
         dto.setId(ticket.getId());

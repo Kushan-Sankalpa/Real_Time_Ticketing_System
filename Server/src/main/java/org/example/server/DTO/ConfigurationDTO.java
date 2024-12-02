@@ -3,6 +3,9 @@ package org.example.server.DTO;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+/**
+ * Data Transfer Object (DTO) for Configuration settings.
+ */
 @Data
 public class ConfigurationDTO {
 

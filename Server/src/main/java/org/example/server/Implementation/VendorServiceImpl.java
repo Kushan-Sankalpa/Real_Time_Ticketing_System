@@ -9,12 +9,15 @@ import org.example.server.Service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+/**
+ * Implementation of the VendorService interface for managing vendor interactions with the ticket pool.
+ */
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -29,11 +32,18 @@ public class VendorServiceImpl implements VendorService {
     private VendorRepository vendorRepository;
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate; // Added
+    private SimpMessagingTemplate messagingTemplate;
 
     private ExecutorService vendorExecutor;
     private List<VendorRunnable> vendorRunnables = new ArrayList<>();
 
+
+    /**
+     * Starts vendor threads to release tickets into the ticket pool at a specified rate.
+     *
+     * @param numberOfVendors The number of vendor threads to start.
+     * @param ticketReleaseRate The interval (in milliseconds) at which each vendor releases tickets.
+     */
     @Override
     public void startVendors(int numberOfVendors, int ticketReleaseRate) {
 
@@ -58,6 +68,9 @@ public class VendorServiceImpl implements VendorService {
         }
     }
 
+    /**
+     * Stops all vendor threads and clears the list of runnables.
+     */
     @Override
     public void stopVendors() {
         if (vendorExecutor != null && !vendorExecutor.isShutdown()) {
@@ -69,6 +82,12 @@ public class VendorServiceImpl implements VendorService {
         }
     }
 
+
+
+
+    /**
+     * Inner class representing a vendor's runnable task
+     */
     private class VendorRunnable implements Runnable {
         private final String vendorName;
         private final int ticketReleaseRate;
@@ -85,6 +104,10 @@ public class VendorServiceImpl implements VendorService {
             running = false;
         }
 
+        /**
+         * Main logic for vendor threads.
+         * Vendors add tickets to the ticket pool until the total ticket limit is reached.
+         */
         @Override
         public void run() {
             try {

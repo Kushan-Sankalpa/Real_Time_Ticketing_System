@@ -1,13 +1,14 @@
-
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Describes the configuration settings for the ticketing system.
+ * Provides methods to configure settings, save to a file, and load from a file.
+ */
 public class Configuration {
     private int totalTickets;
     private int initialTickets;
@@ -48,7 +49,6 @@ public class Configuration {
     public void setCustomerRetrievalRate(int customerRetrievalRate) {
         this.customerRetrievalRate = customerRetrievalRate;
     }
-
     public int getMaxTicketCapacity() {
         return maxTicketCapacity;
     }
@@ -72,6 +72,8 @@ public class Configuration {
     public void setNumberOfCustomers(int numberOfCustomers) {
         this.numberOfCustomers = numberOfCustomers;
     }
+
+
 
     public void configure (Scanner scanner){
         System.out.println("*****************************************");

@@ -2,6 +2,9 @@ package org.example.server.DTO;
 
 import lombok.Data;
 
+/**
+ * Data Transfer Object (DTO) for Ticket Information
+ */
 @Data
 public class TicketDTO {
     private Long id;

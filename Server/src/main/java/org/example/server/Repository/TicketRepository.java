@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository interface for Ticket entities.
+ */
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     long countByIsSold(boolean isSold);
