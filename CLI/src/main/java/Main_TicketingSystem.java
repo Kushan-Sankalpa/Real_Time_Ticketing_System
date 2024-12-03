@@ -41,7 +41,7 @@ public class Main_TicketingSystem {
             if (loadedConfig != null) {
                 config = loadedConfig;
             } else {
-                System.out.println("Failed to load configuration. Proceeding with new configuration.!");
+                System.out.println("Failed to load configuration. Proceeding with new configuration.!\n");
                 config.configure(scanner);
             }
         } else {

@@ -58,7 +58,7 @@ public class TicketPool {
         }
         tickets.add(ticket);
         totalTicketsAdded++;
-        System.out.println("Vendor added: " + ticket + "  [ Available Tickets in pool: " + tickets.size()+ " ]");
+        System.out.println("Vendor added: " + ticket + "  [ Available Tickets in the pool: " + tickets.size()+ " ]");
         notifyAll();
         return true;
     }
@@ -81,7 +81,7 @@ public class TicketPool {
         }
         String ticket = tickets.remove(0);
         totalTicketsSold++;
-        System.out.println("Customer purchased: " + ticket + "  [ Available Tickets in pool: " + tickets.size()+ " ]");
+        System.out.println("Customer purchased: " + ticket + "  [ Available Tickets in the  pool: " + tickets.size()+ " ]");
         notifyAll();
         return ticket;
     }

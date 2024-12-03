@@ -1,13 +1,12 @@
 package org.example.server.Controller;
 
-import org.example.server.DTO.TicketDTO;
+
 import org.example.server.DTO.TicketStatisticsDTO;
 import org.example.server.Service.TicketPool;
-import org.example.server.Service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
 
 
 /**
@@ -19,24 +18,7 @@ import java.util.List;
 public class TicketController {
 
     @Autowired
-    private TicketService ticketService;
-
-    @Autowired
     private TicketPool ticketPool;
-
-
-    /**
-     * Handles ticket purchase requests.
-     *
-     * @param ticketId The ID of the ticket to purchase.
-     * @param customerName The name of the customer making the purchase.
-     * @return Details of the purchased ticket.
-     */
-    @PostMapping("/{ticketId}/purchase")
-    public TicketDTO purchaseTicket(@PathVariable Long ticketId, @RequestParam String customerName) {
-        return ticketService.purchaseTicket(ticketId, customerName);
-    }
-
 
 
     /**

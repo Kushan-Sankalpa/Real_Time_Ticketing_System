@@ -145,7 +145,7 @@ const ConfigurationForm = ({ onSave }) => {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Maximum Ticket Capacity</Form.Label>
+        <Form.Label>Maximum Ticket Capacity of The Ticket Pool</Form.Label>
         <Form.Control
           type="number"
           name="maxTicketCapacity"
@@ -159,7 +159,7 @@ const ConfigurationForm = ({ onSave }) => {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Total Tickets</Form.Label>
+        <Form.Label>Total Number of Tickets</Form.Label>
         <Form.Control
           type="number"
           name="totalTickets"
@@ -173,7 +173,7 @@ const ConfigurationForm = ({ onSave }) => {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Initial Tickets</Form.Label>
+        <Form.Label>Number of tickets to add to the Ticket Pool (Initial Tickets)</Form.Label>
         <Form.Control
           type="number"
           name="initialTickets"

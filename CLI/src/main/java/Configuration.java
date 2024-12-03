@@ -157,7 +157,7 @@ public class Configuration {
         // Prompt for initialTickets
         while(true){
             int maxInitialTickets = Math.min(getMaxTicketCapacity(),getTotalTickets());
-            System.out.print("Enter the number of tickets to add to the Ticket Pool  " + " <= " + maxInitialTickets + "): ");
+            System.out.print("Enter the number of tickets to add to the Ticket Pool ( initialTickets ) " + " <= " + maxInitialTickets + "): ");
             String input = scanner.nextLine();
             try{
                 int initialTickets = Integer.parseInt(input);
@@ -165,10 +165,10 @@ public class Configuration {
                     setInitialTickets(initialTickets);
                     break;
                 }else{
-                    System.out.print("Initial tickets (" + initialTickets + ") exceed maximum capacity (" + getMaxTicketCapacity() + "). Please try again!!\n");
+                    System.out.print("Initial tickets (" + initialTickets + ") exceed maximum capacity (" + getMaxTicketCapacity() + "). Please try again!! \n");
                 }
             }catch(NumberFormatException e){
-                System.out.println("Error!, Invalid input!...Please enter a positive integer\n");
+                System.out.println("Error!, Invalid input!...Please enter a positive integer \n");
             }
 
         }
