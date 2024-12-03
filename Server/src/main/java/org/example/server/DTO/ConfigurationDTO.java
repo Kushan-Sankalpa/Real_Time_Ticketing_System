@@ -2,12 +2,15 @@ package org.example.server.DTO;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Data Transfer Object (DTO) for Configuration settings.
  */
 @Data
+@NoArgsConstructor
 public class ConfigurationDTO {
+    private Long id;
 
     @NotNull(message = "Ticket release rate is required.")
     @Positive(message = "Ticket release rate must be positive.")
@@ -37,5 +40,5 @@ public class ConfigurationDTO {
     @Positive(message = "Number of customers must be positive.")
     private Integer numberOfCustomers;
 
-    private Long id;
+
 }
