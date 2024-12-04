@@ -53,26 +53,21 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
     - **application.properties**:
         Ensure the `src/main/resources/application.properties` file is configured correctly. For example, to use the H2 in-memory database:
         ```properties
-       spring.application.name=Server
+        spring.application.name=Server
         spring.h2.console.enabled=true
         spring.h2.console.path=/h2-console
         
-        # DataSource Configuration
         spring.datasource.url=jdbc:h2:mem:ticketingsystemdb;
         spring.datasource.driverClassName=org.h2.Driver
         spring.datasource.username=sa
         spring.datasource.password=
         
-        # JPA Configuration
         spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
         spring.jpa.hibernate.ddl-auto=update
         spring.jpa.open-in-view=false
         ```
     - **Database Access**:
         Access the H2 console at `http://localhost:8080/h2-console` with the JDBC URL `jdbc:h2:mem:ticketingdb`.
-
-6. **API Endpoints**:
-    The backend exposes several RESTful endpoints for managing configurations, tickets, vendors, and customers. Refer to the [API Documentation](#api-documentation) section below for detailed information.
 
 ### Frontend Setup (React)
 
@@ -88,9 +83,9 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
 
 3. **Start the Application**:
     ```bash
-    npm start
+    npm run dev
     ```
-    The frontend will start and be accessible at `http://localhost:3000`.
+    The frontend will start and be accessible at `http://localhost:5176`.
 
 4. **Configuration**:
     - Ensure that the frontend is correctly configured to communicate with the backend API at `http://localhost:8080`.
@@ -140,7 +135,7 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
 
 #### Configuration via UI:
 1. **Access the Frontend**:
-    - Open your web browser and navigate to `http://localhost:3000`.
+    - Open your web browser and navigate to `http://localhost:5176`.
 
 2. **Fill Out the Configuration Form**:
     - **Ticket Release Rate**: Enter the interval (in milliseconds) at which vendors release tickets.
@@ -207,22 +202,6 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
 
 ---
 
-## Troubleshooting
-
-### Port Conflicts
-- If `http://localhost:8080` or `http://localhost:3000` are not accessible, ensure no other applications are using these ports.
-- You can change the default ports in the backend's `application.properties` and the frontend's configuration if necessary.
-
-### Database Issues
-- The application uses an in-memory database (H2) for simplicity.
-- Ensure the database is properly configured if you switch to a persistent database.
-
-### Real-Time Updates Not Working
-- Check if WebSocket connections are allowed through your firewall or network policies.
-- Ensure that the backend is running and accessible from the frontend.
-
----
-
 ## API Documentation
 
 ### Configuration Endpoints
@@ -252,15 +231,6 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
     - **URL**: `/api/system/reset`
     - **Method**: `DELETE`
     - **Description**: Resets the ticketing system by clearing all data.
-
-### Ticket Endpoints
-- **Purchase Ticket**
-    - **URL**: `/api/tickets/{ticketId}/purchase`
-    - **Method**: `POST`
-    - **Parameters**:
-        - `ticketId`: `Long` (Path Variable)
-        - `customerName`: `String` (Query Parameter)
-    - **Description**: Handles ticket purchase requests.
 
 - **Get Available Tickets**
     - **URL**: `/api/tickets/getAvailableTickets`
