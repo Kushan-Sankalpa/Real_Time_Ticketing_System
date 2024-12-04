@@ -38,7 +38,7 @@ public class TicketController {
      *
      * @return TicketStatisticsDTO with sold, released, and yet-to-release tickets.
      */
-    @GetMapping("/statistics") //ok
+    @GetMapping("/statistics")
     public ResponseEntity<TicketStatisticsDTO> getTicketStatistics() {
         TicketStatisticsDTO stats = ticketPool.getTicketStatistics();
         return ResponseEntity.ok(stats);
