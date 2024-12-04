@@ -161,12 +161,12 @@ public class TicketPool {
             }
         }
 
-        // Remove a ticket from the queue
+        // remove a ticket from the queue
         Ticket ticket = tickets.poll();
         if (ticket != null) {
             ticket.setSold(true);
             ticket.setCustomerName(customerName);
-            ticketRepository.save(ticket); // Update the ticket as sold in the database
+            ticketRepository.save(ticket); // update the ticket as sold in the database
             totalTicketsSold++;
 
             // Log the ticket purchase.
