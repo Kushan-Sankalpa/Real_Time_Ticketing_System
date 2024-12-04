@@ -47,20 +47,27 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public void startVendors(int numberOfVendors, int ticketReleaseRate) {
 
-        vendorExecutor = Executors.newCachedThreadPool();
-        vendorRunnables.clear();
+        vendorExecutor = Executors.newCachedThreadPool(); // Create thread pool
+        vendorRunnables.clear();  // Clear any existing vendor tasks
 
+
+        // Create and start threads for each vendor
         for (int i = 1; i <= numberOfVendors; i++) {
             String vendorName = "Vendor-" + i;
 
+
+            // Check if vendor already exists in the repository
             Optional<Vendor> existingVendor = vendorRepository.findByVendorName(vendorName);
             if (!existingVendor.isPresent()) {
+
+                // Create and save a new vendor
                 Vendor vendor = new Vendor();
                 vendor.setVendorName(vendorName);
                 vendor.setTicketReleaseRate(ticketReleaseRate);
                 vendorRepository.save(vendor);
             }
 
+            // Start a new vendor thread
             System.out.println("Starting " + vendorName);
             VendorRunnable vendorRunnable = new VendorRunnable(vendorName, ticketReleaseRate);
             vendorRunnables.add(vendorRunnable);
@@ -74,6 +81,7 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public void stopVendors() {
         if (vendorExecutor != null && !vendorExecutor.isShutdown()) {
+            // Stop each vendor task.
             for (VendorRunnable vendorRunnable : vendorRunnables) {
                 vendorRunnable.stop();
             }
@@ -97,6 +105,7 @@ public class VendorServiceImpl implements VendorService {
         public VendorRunnable(String vendorName, int ticketReleaseRate) {
             this.vendorName = vendorName;
             this.ticketReleaseRate = ticketReleaseRate;
+            // Initialize ticket count based on the repository
             this.ticketNumber = (int) ticketRepository.countByVendorName(vendorName) + 1;
         }
 
@@ -112,10 +121,12 @@ public class VendorServiceImpl implements VendorService {
         public void run() {
             try {
                 while (running) {
+                    // Check if the total ticket limit is reached
                     int totalTicketsAdded = ticketPool.getTotalTicketsAdded();
                     int totalTicketsToRelease = ticketPool.getTotalTicketsToRelease();
 
                     if (totalTicketsAdded >= totalTicketsToRelease) {
+                        // Log when all tickets are released
                         String logMessage = vendorName + " has released all tickets. Total Tickets Added: ";
                         messagingTemplate.convertAndSend("/topic/logs", logMessage);
 
@@ -126,6 +137,7 @@ public class VendorServiceImpl implements VendorService {
                         break;
                     }
 
+                    // Create and add a new ticket to the pool
                     String ticketCode = vendorName + "-Ticket-" + ticketNumber++;
                     Ticket ticket = new Ticket();
                     ticket.setTicketCode(ticketCode);
@@ -134,11 +146,13 @@ public class VendorServiceImpl implements VendorService {
 
                     boolean added = ticketPool.addTicket(ticket);
                     if (!added) {
+                        // If the pool is full, wait before retrying
                         System.out.println(vendorName + " waiting to add tickets.");
                         Thread.sleep(500);
                         continue;
                     }
 
+                    // Wait before releasing the next ticket
                     Thread.sleep(ticketReleaseRate);
                 }
             } catch (InterruptedException e) {

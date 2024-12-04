@@ -25,8 +25,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
 
+        // Create a map to store field names and error messages
         Map<String, String> errors = new HashMap<>();
 
+        // Iterate through all validation errors and collect field names and messages.
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
@@ -46,6 +48,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleIllegalArgumentExceptions(
             IllegalArgumentException ex) {
 
+        // Create a map to store the error message
         Map<String, String> errors = new HashMap<>();
         errors.put("error", ex.getMessage());
 
@@ -61,6 +64,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
         ex.printStackTrace();
+
+        // Create a map with a generic error message
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "An unexpected error occurred.");
         return new ResponseEntity<>(errors, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -43,20 +43,30 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void startCustomers(int numberOfCustomers, int customerRetrievalRate) {
+
+        // Thread pool for customer tasks.
         customerExecutor = Executors.newCachedThreadPool();
+        // Clear any previous tasks.
         customerRunnables.clear();
 
+
+        // Loop to create customer threads
         for (int i = 1; i <= numberOfCustomers; i++) {
             String customerName = "Customer-" + i;
 
+            // Check if customer already exists in the repository
             Optional<Customer> existingCustomer = customerRepository.findByCustomerName(customerName);
             if (!existingCustomer.isPresent()) {
+
+                // If not, create a new customer and save it to the repository
                 Customer customer = new Customer();
                 customer.setCustomerName(customerName);
                 customer.setCustomerRetrievalRate(customerRetrievalRate);
                 customerRepository.save(customer);
             }
 
+
+            // Create and submit a new customer task to the thread pool
             CustomerRunnable customerRunnable = new CustomerRunnable(customerName, customerRetrievalRate);
             customerRunnables.add(customerRunnable);
             customerExecutor.submit(customerRunnable);
@@ -70,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void stopCustomers() {
         if (customerExecutor != null && !customerExecutor.isShutdown()) {
             for (CustomerRunnable customerRunnable : customerRunnables) {
-                customerRunnable.stop();
+                customerRunnable.stop(); // Stop each customer task.
             }
             customerExecutor.shutdownNow();
             customerRunnables.clear();
@@ -103,14 +113,16 @@ public class CustomerServiceImpl implements CustomerService {
         public void run() {
             try {
                 while (running) {
+                    // Attempt to remove a ticket from the ticket pool
                     Ticket ticket = ticketPool.removeTicket(customerName);
                     if (ticket == null) {
+                        // If no tickets are available, log and exit
                         String logMessage = customerName + " found no tickets available. Exiting.";
                         messagingTemplate.convertAndSend("/topic/logs", logMessage);
                         System.out.println(logMessage);
                         break;
                     }
-                    Thread.sleep(customerRetrievalRate);
+                    Thread.sleep(customerRetrievalRate); // Wait before next ticket retrieval
                 }
             } catch (InterruptedException e) {
                 String logMessage = customerName + " interrupted and stopping.";

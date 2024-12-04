@@ -50,17 +50,21 @@ public class TicketPool {
             return;
         }
 
+        // Set ticket pool configurations
         this.maxCapacity = config.getMaxTicketCapacity();
         this.totalTicketsToRelease = config.getTotalTickets();
         this.initialTickets = config.getInitialTickets();
 
+        // Load existing unsold tickets from the database
         List<Ticket> existingTickets = ticketRepository.findByIsSold(false);
         tickets.clear();
         tickets.addAll(existingTickets);
 
+        // Update counters based on database records
         totalTicketsAdded = (int) ticketRepository.count();
         totalTicketsSold = (int) ticketRepository.countByIsSold(true);
 
+        // If no tickets exist in the database, add initial tickets
         if (totalTicketsAdded == 0) {
             int ticketsToAdd = Math.min(initialTickets, maxCapacity);
             for (int i = 1; i <= ticketsToAdd; i++) {
@@ -119,10 +123,12 @@ public class TicketPool {
             }
         }
 
+        // Save the ticket to the database and add it to the queue
         ticketRepository.save(ticket);
         tickets.add(ticket);
         totalTicketsAdded++;
 
+        // Log the addition of the ticket
         String logMessage = ticket.getVendorName() + " added ticket: " + ticket.getTicketCode() + ", [ Available Tickets in pool: " + tickets.size() + "]";
         messagingTemplate.convertAndSend("/topic/logs", logMessage);
 
@@ -155,13 +161,15 @@ public class TicketPool {
             }
         }
 
+        // Remove a ticket from the queue
         Ticket ticket = tickets.poll();
         if (ticket != null) {
             ticket.setSold(true);
             ticket.setCustomerName(customerName);
-            ticketRepository.save(ticket);
+            ticketRepository.save(ticket); // Update the ticket as sold in the database
             totalTicketsSold++;
 
+            // Log the ticket purchase.
             String logMessage =  customerName + " purchased ticket: " + ticket.getTicketCode() + ", [ Available Tickets in pool: " + tickets.size() + "]";
             messagingTemplate.convertAndSend("/topic/logs", logMessage);
 
