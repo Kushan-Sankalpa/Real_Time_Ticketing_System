@@ -287,6 +287,4 @@ For any issues, questions, or contributions, please contact the project maintain
 - **Email**: kushansankalpa717@gmail.com
 - **GitHub**:https://github.com/Kushan-Sankalpa
 
----
 
-Thank you for using the **Real-Time Event Ticketing System**! We hope it serves your event management needs effectively.
