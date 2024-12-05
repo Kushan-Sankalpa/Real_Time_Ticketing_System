@@ -13,68 +13,100 @@ Ensure you have the following installed on your system:
 1. **Java Development Kit (JDK)**: Version 17 or higher.
 2. **Node.js**: Version 18 or higher.
 3. **npm (Node Package Manager)**: Included with Node.js.
-4. **Maven**: For building the Spring Boot application.
+4. **Maven**: For building the Spring Boot application (optional if using an IDE like IntelliJ).
 
 ### Backend Setup (Spring Boot)
 
-The backend of the Real-Time Event Ticketing System is built using **Spring Boot**, which was initialized using **Spring Initializr**. Follow the steps below to set up and run the backend application.
+The backend of the Real-Time Event Ticketing System is built using **Spring Boot**, which was initialized using **Spring Initializr**. Follow the steps below to set up and run the backend application using **IntelliJ IDEA** or the **command line**.
+
+#### Option 1: Using IntelliJ IDEA
 
 1. **Clone the Repository**:
     ```bash
-    git clone <repository-url>
-    cd <repository-folder>/server
+    git clone https://github.com/Kushan-Sankalpa/Real-Time-Event-Ticketing-System.git
+    cd Real-Time-Event-Ticketing-System/server
     ```
+    > **Note**: Replace the URL with your actual repository URL if different.
 
-2. **Project Structure**:
-    The backend project was generated using **Spring Initializr** with the following configurations:
-    - **Project**: Maven Project
-    - **Language**: Java
-    - **Spring Boot**: 2.7.x or higher
-    - **Dependencies**:
-        - Spring Web
-        - Spring Data JPA
-        - H2 Database (for in-memory testing)
-        - Spring Boot DevTools (optional, for development convenience)
-        - Lombok (optional, for reducing boilerplate code)
+2. **Open the Project in IntelliJ IDEA**:
+    - Launch **IntelliJ IDEA**.
+    - Click on `File` > `Open...` and navigate to the `server` directory of the cloned repository.
+    - Select the project and click `OK` to open it.
 
-3. **Building the Backend Application**:
-    Ensure you are in the `server` directory of the cloned repository.
-    ```bash
-    mvn clean install
-    ```
+3. **Import Maven Dependencies**:
+    - IntelliJ IDEA typically detects Maven projects automatically. If not, right-click on the `pom.xml` file and select `Maven` > `Relod Project`.
 
-4. **Running the Backend Application**:
-    ```bash
-    mvn spring-boot:run
-    ```
-    The backend will start and be accessible at `http://localhost:8080`.
-
-5. **Configuration**:
-    - **application.properties**:
-        Ensure the `src/main/resources/application.properties` file is configured correctly. For example, to use the H2 in-memory database:
+4. **Configure Application Properties**:
+    - Open `src/main/resources/application.properties`.
+    - Ensure the following configurations are set:
         ```properties
         spring.application.name=Server
         spring.h2.console.enabled=true
         spring.h2.console.path=/h2-console
-        
-        spring.datasource.url=jdbc:h2:mem:ticketingsystemdb;
+
+        spring.datasource.url=jdbc:h2:mem:ticketingsystemdb
         spring.datasource.driverClassName=org.h2.Driver
         spring.datasource.username=sa
         spring.datasource.password=
-        
+
         spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
         spring.jpa.hibernate.ddl-auto=update
         spring.jpa.open-in-view=false
         ```
-    - **Database Access**:
-        Access the H2 console at `http://localhost:8080/h2-console` with the JDBC URL `jdbc:h2:mem:ticketingdb`.
+
+5. **Run the Application**:
+    - In IntelliJ IDEA, navigate to the `ServerApplication` class located in the `org.example.server` package.
+    - Right-click on the `ServerApplication` class and select `Run 'ServerApplication.main()'`.
+    - The backend will start and be accessible at `http://localhost:8080`.
+
+6. **Access the H2 Console**:
+    - Open your web browser and navigate to `http://localhost:8080/h2-console`.
+    - Use the following JDBC URL to connect:
+        ```
+        jdbc:h2:mem:ticketingsystemdb
+        ```
+    - Username: `sa`
+    - Password: *(leave blank)*
+
+#### Option 2: Using Command Line (Maven)
+
+1. **Clone the Repository**:
+    ```bash
+    git clone https://github.com/Kushan-Sankalpa/Real-Time-Event-Ticketing-System.git
+    cd Real-Time-Event-Ticketing-System/server
+    ```
+    > **Note**: Replace the URL with your actual repository URL if different.
+
+2. **Build the Backend Application**:
+    ```bash
+    mvn clean install
+    ```
+
+3. **Run the Application**:
+    ```bash
+    mvn spring-boot:run
+    ```
+    - The backend will start and be accessible at `http://localhost:8080`.
+
+4. **Access the H2 Console**:
+    - Open your web browser and navigate to `http://localhost:8080/h2-console`.
+    - Use the following JDBC URL to connect:
+        ```
+        jdbc:h2:mem:ticketingsystemdb
+        ```
+    - Username: `sa`
+    - Password: *(leave blank)*
+
+---
 
 ### Frontend Setup (React)
 
 1. **Navigate to the Frontend Directory**:
     ```bash
-    cd <repository-folder>/client
+    cd ../client /Realp-time-ticket-Gui
+    
     ```
+    > **Note**: Ensure you are in the root directory of the cloned repository before navigating.
 
 2. **Install Dependencies**:
     ```bash
@@ -85,17 +117,44 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
     ```bash
     npm run dev
     ```
-    The frontend will start and be accessible at `http://localhost:5176`.
+    - The frontend will start and be accessible at `http://localhost:5176`.
 
 4. **Configuration**:
     - Ensure that the frontend is correctly configured to communicate with the backend API at `http://localhost:8080`.
-    - Modify the API base URL in the frontend configuration files if necessary.
+    - 
+
+---
 
 ### CLI Simulation Setup
 
+The CLI simulation allows you to test the core functionalities of the ticketing system outside the web interface.
+
+#### Option 1: Using IntelliJ IDEA
+
 1. **Navigate to the CLI Directory**:
     ```bash
-    cd <repository-folder>/cli
+    cd ../cli
+    ```
+
+2. **Open the CLI Project in IntelliJ IDEA**:
+    - Launch **IntelliJ IDEA**.
+    - Click on `File` > `Open...` and navigate to the `cli` directory of the cloned repository.
+    - Select the project and click `OK` to open it.
+
+3. **Compile the Java Files**:
+    - IntelliJ IDEA automatically compiles Java files upon saving if configured.
+
+4. **Run the Simulation**:
+    - Locate the `Main_TicketingSystem` class in the project.
+    - Right-click on the `Main_TicketingSystem` class and select `Run 'Main_TicketingSystem.main()'`.
+    - The CLI will start and prompt you to configure the system or load an existing configuration.
+    - Follow the on-screen instructions to set up ticketing rates, capacities, and the number of vendors and customers.
+
+#### Option 2: Using Command Line
+
+1. **Navigate to the CLI Directory**:
+    ```bash
+    cd ../cli
     ```
 
 2. **Compile the Java Files**:
@@ -107,7 +166,6 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
     ```bash
     java Main_TicketingSystem
     ```
-
     - The CLI will prompt you to configure the system or load an existing configuration.
     - Follow the on-screen instructions to set up ticketing rates, capacities, and the number of vendors and customers.
 
@@ -118,10 +176,13 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
 ### How to Configure and Start the System
 
 #### Configuration via CLI:
+
 - **Run the CLI Simulation**:
     ```bash
     java Main_TicketingSystem
     ```
+    - If using IntelliJ IDEA, follow the [CLI Simulation Setup Option 1](#option-1-using-intellij-idea).
+
 - **Follow the Prompts**:
     - **Ticket Release Rate**: Enter the interval (in milliseconds) at which vendors release tickets.
     - **Customer Retrieval Rate**: Enter the interval (in milliseconds) at which customers purchase tickets.
@@ -134,10 +195,14 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
     - You can save the current configuration to a JSON file or load an existing configuration.
 
 #### Configuration via UI:
-1. **Access the Frontend**:
+
+1. ** Run the Springboot Application
+    -  - Right-click on the `ServerApplication` class and select `Run 'ServerApplication.main()'`.
+
+2. **Access the Frontend**:
     - Open your web browser and navigate to `http://localhost:5176`.
 
-2. **Fill Out the Configuration Form**:
+3. **Fill Out the Configuration Form**:
     - **Ticket Release Rate**: Enter the interval (in milliseconds) at which vendors release tickets.
     - **Customer Retrieval Rate**: Enter the interval (in milliseconds) at which customers purchase tickets.
     - **Maximum Ticket Capacity**: Set the maximum number of tickets that the pool can hold.
@@ -180,72 +245,9 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
 5. **Real-Time Log Display**:
     - Located on the frontend dashboard, it shows logs of ticket releases and purchases in real-time.
     - **Logs Include**:
-        - Vendor actions (e.g., "Vendor-1 added ticket: Ticket-1").
-        - Customer actions (e.g., "Customer-2 purchased ticket: Ticket-1").
+        - Vendor actions (e.g., "Vendor-1 added ticket: Ticket-1, [ Available Tickets in pool: 2 ]").
+        - Customer actions (e.g., "Customer-2 purchased ticket: Ticket-1, [ Available Tickets in pool: 1 ]").
         - System notifications (e.g., "All tickets sold. Customers are exiting.").
-
----
-
-## Additional Information
-
-### Error Handling
-- The system includes validation for configuration inputs to ensure all values are positive integers and within logical bounds.
-- Error messages are displayed in the UI for any invalid inputs.
-
-### WebSocket Communication
-- The frontend and backend communicate using WebSocket for real-time updates.
-- This ensures immediate feedback on ticket status, logs, and statistics without needing to refresh the page.
-
-### Thread Management
-- The backend handles vendor and customer operations using multithreading to simulate concurrent ticket release and purchase processes.
-- Threads are managed efficiently to prevent resource leaks and ensure smooth operation.
-
----
-
-## API Documentation
-
-### Configuration Endpoints
-- **Save Configuration**
-    - **URL**: `/api/configurations/saveConfigurations`
-    - **Method**: `POST`
-    - **Body**: `ConfigurationDTO` JSON
-    - **Description**: Saves a new configuration.
-
-- **Delete Latest Configuration**
-    - **URL**: `/api/configurations/deleteLatest`
-    - **Method**: `DELETE`
-    - **Description**: Deletes the latest configuration.
-
-### System Control Endpoints
-- **Start System**
-    - **URL**: `/api/system/start`
-    - **Method**: `GET`
-    - **Description**: Starts the ticketing system with the latest configuration.
-
-- **Stop System**
-    - **URL**: `/api/system/stop`
-    - **Method**: `GET`
-    - **Description**: Stops the ticketing system.
-
-- **Reset System**
-    - **URL**: `/api/system/reset`
-    - **Method**: `DELETE`
-    - **Description**: Resets the ticketing system by clearing all data.
-
-- **Get Available Tickets**
-    - **URL**: `/api/tickets/getAvailableTickets`
-    - **Method**: `GET`
-    - **Description**: Retrieves the number of available tickets.
-
-- **Get Ticket Statistics**
-    - **URL**: `/api/tickets/statistics`
-    - **Method**: `GET`
-    - **Description**: Retrieves current ticket statistics.
-
-### Log Endpoint
-- **Real-Time Logs**
-    - **WebSocket Endpoint**: `/topic/logs`
-    - **Description**: Streams real-time logs of ticket releases and purchases.
 
 ---
 
@@ -255,6 +257,8 @@ For any issues, questions, or contributions, please contact the project maintain
 
 - **Name**: Kushan Sankalpa
 - **Email**: kushansankalpa717@gmail.com
-- **GitHub**:https://github.com/Kushan-Sankalpa
+- **GitHub**: [Kushan-Sankalpa](https://github.com/Kushan-Sankalpa)
 
+---
 
+Thank you for using the **Real-Time Event Ticketing System**! We hope it serves your event management needs effectively.
