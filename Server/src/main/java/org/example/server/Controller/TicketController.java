@@ -29,7 +29,6 @@ public class TicketController {
     @GetMapping("/getAvailableTickets")
     public ResponseEntity<Integer> getAvailableTickets() {
         int availableTickets = ticketPool.getAvailableTicketsCount();
-        System.out.println("Available tickets: " + availableTickets);
         return ResponseEntity.ok(availableTickets);
     }
 
