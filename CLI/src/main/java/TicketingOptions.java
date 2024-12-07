@@ -4,17 +4,17 @@ import java.util.Scanner;
 
 
 /**
- * Main class for the Real-Time Event Ticketing System.
+ * class for the Real-Time Event Ticketing System options.
  * Handles user interactions and system control.
  */
-public class Main_TicketingSystem {
+public class TicketingOptions {
     private Configuration config;
     private TicketPool ticketPool;
     private List<Thread> userThreads;
     private List<User> users;
     private Scanner scanner;
 
-    public Main_TicketingSystem () {
+    public TicketingOptions() {
         userThreads = new ArrayList<>();
         users = new ArrayList<>();
         scanner = new Scanner(System.in);
@@ -159,17 +159,17 @@ public class Main_TicketingSystem {
      * Processes commands like start, stop, status, and exit.
      */
     private class InputHandler implements Runnable {
-        private final Main_TicketingSystem ticketingSystem;
+        private final TicketingOptions ticketingSystem;
         private final Scanner scanner;
 
         /**
          * Constructs a new InputHandler.
          *
-         * @param ticketingSystem the main ticketing system instance.
+         * @param ticketingOptions the main ticketing system instance.
          * @param scanner         the shared Scanner object.
          */
-        public InputHandler(Main_TicketingSystem ticketingSystem, Scanner scanner) {
-            this.ticketingSystem = ticketingSystem;
+        public InputHandler(TicketingOptions ticketingOptions, Scanner scanner) {
+            this.ticketingSystem = ticketingOptions;
             this.scanner = scanner;
         }
 
@@ -203,13 +203,4 @@ public class Main_TicketingSystem {
         }
     }
 
-    /**
-     * The main method to run the ticketing system.
-     *
-     * @param args command-line arguments (not used).
-     */
-    public static void main(String[] args) {
-        Main_TicketingSystem system = new Main_TicketingSystem();
-        system.start();
-    }
 }

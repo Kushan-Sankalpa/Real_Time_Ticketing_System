@@ -28,6 +28,12 @@ public class Customer extends User {
     @Override
     public void run() {
         System.out.println("Customer-" + userId + " started.");
+        try{
+            Thread.sleep(10);
+
+        }catch (Exception e){
+
+        }
 
         while (running) {
             try {

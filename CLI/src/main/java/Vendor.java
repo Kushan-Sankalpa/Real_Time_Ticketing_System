@@ -27,6 +27,12 @@ public class Vendor extends User {
     @Override
     public void run() {
         System.out.println("Vendor-" + userId + " started.");
+        try{
+            Thread.sleep(10);
+
+        }catch (Exception e){
+
+        }
 
         while (running) {
             try {
