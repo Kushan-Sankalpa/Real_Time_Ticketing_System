@@ -196,7 +196,7 @@ The backend of the Real-Time Event Ticketing System is built using **Spring Boot
 
 For any issues, questions, or contributions, please contact the project maintainer:
 
-- **Name**: Kushan Sankalpa
+- **Name**: Badde Gamage Kushan Sankalpa
 - **Email**: kushansankalpa717@gmail.com
 - **GitHub**: [Kushan-Sankalpa](https://github.com/Kushan-Sankalpa)
 
